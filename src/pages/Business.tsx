@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import NewsCard from "@/components/NewsCard";
 
 const Business = () => {
@@ -31,7 +31,6 @@ const Business = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-news-dark mb-2">Business</h1>

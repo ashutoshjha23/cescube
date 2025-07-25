@@ -1,13 +1,12 @@
-import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Footer from "@/components/Footer";
 
 const Contact = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
@@ -57,21 +56,21 @@ const Contact = () => {
                     <Mail className="h-5 w-5 text-news-primary" />
                     <div>
                       <p className="font-medium text-news-dark">Email</p>
-                      <p className="text-muted-foreground">contact@newshub.com</p>
+                      <p className="text-muted-foreground">contact@CNAWS.com</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Phone className="h-5 w-5 text-news-primary" />
                     <div>
                       <p className="font-medium text-news-dark">Phone</p>
-                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-muted-foreground">+91 8278652404</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <MapPin className="h-5 w-5 text-news-primary" />
                     <div>
                       <p className="font-medium text-news-dark">Address</p>
-                      <p className="text-muted-foreground">123 News Street<br />Media City, MC 12345</p>
+                      <p className="text-muted-foreground">no. 23<br />mera ghar</p>
                     </div>
                   </div>
                 </div>

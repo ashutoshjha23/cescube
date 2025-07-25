@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
 import NewsCard from "@/components/NewsCard";
+import Footer from "@/components/Footer";
 
 const World = () => {
   const worldNews = [
@@ -31,7 +31,6 @@ const World = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-news-dark mb-2">World News</h1>

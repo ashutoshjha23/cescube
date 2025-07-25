@@ -20,7 +20,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Newspaper className="h-8 w-8 text-news-primary" />
-            <span className="text-xl font-bold text-news-dark dark:text-white">PORNHUB</span>
+            <span className="text-xl font-bold text-news-dark dark:text-white">CNAWS</span>
           </Link>
 
           {/* Desktop Navigation */}

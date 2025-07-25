@@ -2,6 +2,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Components
+import Header from "@/components/Header";
+import Footer from "@/components/Footer"; 
+
+// Pages
 import Index from "./pages/Index";
 import World from "./pages/World";
 import Politics from "./pages/Politics";
@@ -25,23 +31,30 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/world" element={<World />} />
-          <Route path="/politics" element={<Politics />} />
-          <Route path="/business" element={<Business />} />
-          <Route path="/technology" element={<Technology />} />
-          <Route path="/sports" element={<Sports />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/board-of-advisor" element={<BoardOfAdvisor />} />
-          <Route path="/emerging" element={<Emerging />} />
-          <Route path="/disruptive" element={<Disruptive />} />
-          <Route path="/hybrid" element={<Hybrid />} />
-          <Route path="/economic" element={<Economic />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Header />
+        <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+          <main style={{ flex: 1 }}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/world" element={<World />} />
+              <Route path="/politics" element={<Politics />} />
+              <Route path="/business" element={<Business />} />
+              <Route path="/technology" element={<Technology />} />
+              <Route path="/sports" element={<Sports />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/board-of-advisor" element={<BoardOfAdvisor />} />
+              <Route path="/board" element={<BoardOfAdvisor />} /> {/* optional alias */}
+              <Route path="/emerging" element={<Emerging />} />
+              <Route path="/disruptive" element={<Disruptive />} />
+              <Route path="/hybrid" element={<Hybrid />} />
+              <Route path="/economic" element={<Economic />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
