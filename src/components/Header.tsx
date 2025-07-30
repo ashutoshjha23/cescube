@@ -1,6 +1,9 @@
 import { Newspaper, Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import logoLight from "@/assets/logowhite.png";
+import logoDark from "@/assets/logoblack.png";
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,9 +22,15 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Newspaper className="h-8 w-8 text-news-primary" />
-            <span className="text-xl font-bold text-news-dark dark:text-white">CNAWS</span>
-          </Link>
+  <img
+    src={darkMode ? logoLight : logoDark}
+    alt="CNAWS Logo"
+    className="h-20 w-auto object-contain transition-all duration-300"
+  />
+</Link>
+
+
+
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-6 items-center">

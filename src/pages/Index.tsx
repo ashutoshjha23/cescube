@@ -18,7 +18,7 @@ const IndexPage = () => {
       author: "Jane Doe",
       publishedAt: "2h ago",
       category: "Environment",
-      image: "https://source.unsplash.com/featured/?climate,earth"
+      image: "/team/image2.avif"
     },
     {
       title: "Cyberattack Hits Major Financial Institutions",

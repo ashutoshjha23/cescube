@@ -5,8 +5,8 @@ const teamData = {
     {
       name: "vats",
       role: "Founder & Editor-in-Chief",
-      image: "/team/founder.jpg",
-      description: "Ashutosh leads the vision of the platform and ensures unbiased and accurate reporting."
+      image: "/team/image1.jpg",
+      description: "leads the vision of the platform and ensures unbiased and accurate reporting."
     }
   ],
   developers: [
@@ -14,27 +14,27 @@ const teamData = {
       name: "Ashutosh Jha",
       role: "Frontend Developer",
       image: "/team/john.jpg",
-      description: "John creates clean and responsive UI components to deliver a great user experience."
+      description: ""
     },
     {
-      name: "Praji",
+      name: "bhavneet",
       role: "Backend Developer",
       image: "/team/jane.jpg",
-      description: "Jane builds robust backend systems and APIs to support real-time news updates."
+      description: "."
     }
   ],
   others: [
     {
-      name: "Sam sulek",
+      name: "Sam ",
       role: "Content Strategist",
       image: "/team/emily.jpg",
-      description: "Emily ensures the content is engaging, relevant, and aligns with our editorial standards."
+      description: ""
     },
     {
-      name: "Rahul Gandhi",
+      name: "nemo",
       role: "Marketing Head",
       image: "/team/mark.jpg",
-      description: "Mark drives growth through creative digital campaigns and partnerships."
+      description: ""
     }
   ]
 };

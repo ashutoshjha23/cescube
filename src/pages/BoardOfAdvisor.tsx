@@ -4,27 +4,27 @@ import { Helmet } from "react-helmet";
 
 const advisors = [
   {
-    name: "Dr. A.K. Verma",
-    role: "Former Director General, DRDO",
-    bio: "Expert in strategic defense technology and innovation, advisor to several national R&D councils.",
+    name: "Dr.",
+    role: "Director ",
+    bio: "advisor to s.",
     image: "https://via.placeholder.com/150", 
   },
   {
-    name: "Ms. Ritu Sharma",
-    role: "Senior Policy Analyst, NITI Aayog",
-    bio: "Focuses on national security policy and disruptive tech integration in government sectors.",
+    name: "Ms. ",
+    role: "Analyst",
+    bio: "national security policy a",
     image: "https://via.placeholder.com/150",
   },
   {
-    name: "Prof. Sanjay Patel",
-    role: "Dean of Strategy, IIT Delhi",
-    bio: "Leads interdisciplinary research initiatives involving hybrid warfare and tech foresight.",
+    name: "Prof.",
+    role: "Dean of Strategy",
+    bio: "Leads interdisciplinary research ",
     image: "https://via.placeholder.com/150",
   },
   {
-    name: "Lt. Gen. Rajesh Mehta (Retd.)",
+    name: "Lt.",
     role: "Defense Strategy Consultant",
-    bio: "Provides strategic insights into modern warfare and military preparedness.",
+    bio: "Provides strategic insights",
     image: "https://via.placeholder.com/150",
   },
 ];
@@ -41,9 +41,9 @@ const BoardOfAdvisor = () => {
       </Helmet>
 
       <div className="bg-news-light dark:bg-gray-900 min-h-screen py-12 px-4 sm:px-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center text-news-dark dark:text-white mb-10 underline decoration-news-primary">
-          Board of Advisors
-        </h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-news-dark dark:text-white mb-10">
+  Board of Advisors
+</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
           {advisors.map((advisor, index) => (
