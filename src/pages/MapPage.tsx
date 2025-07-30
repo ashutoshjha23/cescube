@@ -21,7 +21,7 @@ const MapPage = () => {
     <div className="min-h-screen px-6 md:px-12 py-16">
       <h1 className="text-3xl font-bold mb-6">Our Locations</h1>
 
-      <LoadScript googleMapsApiKey='AIzaSyAf_oo0U4AjluwnhnM_pqH17mQHHz-hRuU'>
+      <LoadScript googleMapsApiKey=''>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={5}>
           {locations.map((location, index) => (
             <Marker key={index} position={{ lat: location.lat, lng: location.lng }} title={location.title} />
