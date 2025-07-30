@@ -25,10 +25,10 @@ const Header = () => {
   <img
     src={darkMode ? logoLight : logoDark}
     alt="CNAWS Logo"
-    className="h-20 w-auto object-contain transition-all duration-300"
+    className="h-20 w-15 transition-all duration-300"
   />
+  <span className="text-xl font-bold text-news-dark dark:text-white"></span>
 </Link>
-
 
 
 
