@@ -1,19 +1,13 @@
 import { Link } from "react-router-dom";
-import {
-  FaTwitter,
-  FaFacebookF,
-  FaInstagram,
-  FaLinkedinIn,
-} from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-800 text-gray-100 py-12">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
         
         {/* Quick Navigation */}
         <div>
-          <h3 className="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">
+          <h3 className="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">
             Quick Navigation
           </h3>
           <ul className="space-y-2 text-sm">
@@ -21,7 +15,7 @@ const Footer = () => {
               <Link
                 to="/"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Home
               </Link>
@@ -30,7 +24,7 @@ const Footer = () => {
               <Link
                 to="/about"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 About
               </Link>
@@ -39,7 +33,7 @@ const Footer = () => {
               <Link
                 to="/board"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Board of Advisors
               </Link>
@@ -48,7 +42,7 @@ const Footer = () => {
               <Link
                 to="/contact"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Contact
               </Link>
@@ -58,7 +52,7 @@ const Footer = () => {
 
         {/* Popular Categories */}
         <div>
-          <h3 className="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">
+          <h3 className="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">
             Categories
           </h3>
           <ul className="space-y-2 text-sm">
@@ -66,7 +60,7 @@ const Footer = () => {
               <Link
                 to="/emerging"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Strategic Foresight & Scenario Planning
               </Link>
@@ -75,7 +69,7 @@ const Footer = () => {
               <Link
                 to="/disruptive"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Disrupting & Emerging Technologies
               </Link>
@@ -84,7 +78,7 @@ const Footer = () => {
               <Link
                 to="/hybrid"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Hybrid Warfare & Irregular Conflicts
               </Link>
@@ -93,7 +87,7 @@ const Footer = () => {
               <Link
                 to="/economic"
                 onClick={() => window.scrollTo(0, 0)}
-                className="hover:underline"
+                className="hover:underline hover:text-blue-400"
               >
                 Economic & Resource Warfare
               </Link>
@@ -101,18 +95,21 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Social Media & Copyright */}
+        {/* Contact Email & Copyright */}
         <div>
-          <h3 className="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">
-            Connect With Us
+          <h3 className="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">
+            Contact Us
           </h3>
-          <div className="flex space-x-4 mb-4">
-            <a href="#" aria-label="Twitter" className="hover:text-blue-400 text-lg"><FaTwitter /></a>
-            <a href="#" aria-label="Facebook" className="hover:text-blue-600 text-lg"><FaFacebookF /></a>
-            <a href="#" aria-label="Instagram" className="hover:text-pink-500 text-lg"><FaInstagram /></a>
-            <a href="#" aria-label="LinkedIn" className="hover:text-blue-500 text-lg"><FaLinkedinIn /></a>
-          </div>
-          <p className="text-sm text-gray-400 leading-relaxed">
+          <p className="text-sm mb-2">
+            For inquiries, reach out at:{" "}
+            <a
+              href="mailto:Contact@cnaws.in"
+              className="text-blue-400 hover:underline"
+            >
+              Contact@cnaws.in
+            </a>
+          </p>
+          <p className="text-sm text-gray-400 leading-relaxed mt-4">
             &copy; {new Date().getFullYear()} <span className="font-semibold">CESCube</span>. All rights reserved.
           </p>
         </div>

@@ -14,9 +14,7 @@ const MapPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Our Locations | CNAWS</title>
-      </Helmet>
+
 
       <div className="min-h-screen flex items-center justify-center bg-news-light dark:bg-gray-900 px-4 py-12">
         <motion.div
@@ -26,7 +24,7 @@ const MapPage = () => {
           className="text-center"
         >
           <h1 className="text-4xl font-bold mb-4 text-news-dark dark:text-white">
-            Comflict Map
+            Conflict Map
           </h1>
           <p className="text-lg text-news-primary dark:text-gray-300">
             Coming Soon...

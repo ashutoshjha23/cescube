@@ -1,5 +1,5 @@
 import { Newspaper, Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logoLight from "@/assets/logowhite.png";
 import logoDark from "@/assets/logoblack.png";
@@ -8,7 +8,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const location = useLocation();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -16,7 +18,7 @@ const Header = () => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  // Scroll listener for hide/show header
+  // Hide/show header on scroll
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
@@ -28,140 +30,120 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+        setOpenSubMenu(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const desktopMenus = [
+    {
+      title: "Who Are We",
+      links: [
+        { label: "About", path: "/about" },
+        { label: "Team", path: "/team" },
+        { label: "Core Team", path: "/core-team" },
+        { label: "Board of Advisor", path: "/board" },
+      ],
+    },
+    {
+      title: "Department Desk",
+      links: [
+        { label: "Strategic Foresight & Scenario Planning", path: "/emerging" },
+        { label: "Disruptive & Emerging Technologies", path: "/disruptive" },
+        { label: "Hybrid Warfare & Irregular Conflict", path: "/hybrid" },
+        { label: "Economic & Resource Warfare", path: "/economic" },
+      ],
+    },
+  ];
+
+  const simpleLinks = [
+    { label: "Courses", path: "/courses" },
+    { label: "Conflict Map", path: "/map" },
+    { label: "Contact", path: "/contact" },
+  ];
+
   return (
     <header
-      className={`bg-news-light dark:bg-gray-900 border-b border-news-border sticky top-0 z-50 transition-transform duration-300 ${
-        hidden ? "-translate-y-full" : "translate-y-0"
-      }`}
+      className={`sticky top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-gray-900/90
+        border-b border-news-border dark:border-none shadow-md
+        transition-transform duration-300 ${hidden ? "-translate-y-full" : "translate-y-0"}`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link
+            to="/"
+            className="flex items-center space-x-2 transform transition-transform duration-300 hover:scale-105"
+          >
             <img
               src={darkMode ? logoLight : logoDark}
               alt="CNAWS Logo"
-              className="h-20 w-auto object-contain transition-all duration-300"
+              className="h-10 md:h-16 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6 items-center">
-            {/* Who Are We */}
-            <div className="relative group">
-              <div className="flex items-center gap-1 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary cursor-pointer">
-                Who Are We
-                <ChevronDown className="w-4 h-4" />
+          <nav className="hidden md:flex items-center space-x-6">
+            {desktopMenus.map((menu, idx) => (
+              <div key={idx} className="relative group">
+                <div className="flex items-center gap-1 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary cursor-pointer transition-colors duration-200">
+                  {menu.title} <ChevronDown className="w-4 h-4" />
+                </div>
+                {/* Dropdown */}
+                <div className="absolute left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-700 dark:border-gray-800 shadow-xl rounded-md z-50 min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  {menu.links.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      className="block px-4 py-2 text-sm text-news-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-news-primary transition-all duration-200 rounded-md"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-news-border shadow-md rounded-md z-50 min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link
-                  to="/about"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  About
-                </Link>
-                <Link
-                  to="/team"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Team
-                </Link>
-                <Link
-                  to="/core-team"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Core Team
-                </Link>
-                <Link
-                  to="/board"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Board of Advisor
-                </Link>
-              </div>
-            </div>
+            ))}
 
-            {/* Department Desk */}
-            <div className="relative group">
-              <div className="flex items-center gap-1 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary cursor-pointer">
-                Department Desk
-                <ChevronDown className="w-4 h-4" />
-              </div>
-              <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-news-border shadow-md rounded-md z-50 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link
-                  to="/emerging"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Strategic Foresight & Scenario Planning
-                </Link>
-                <Link
-                  to="/disruptive"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Disruptive & Emerging Technologies
-                </Link>
-                <Link
-                  to="/hybrid"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Hybrid Warfare & Irregular Conflict
-                </Link>
-                <Link
-                  to="/economic"
-                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
-                >
-                  Economic & Resource Warfare
-                </Link>
-              </div>
-            </div>
-
-            {/* Main Links */}
-            <Link
-              to="/courses"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/courses")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Courses
-            </Link>
-
-            <Link
-              to="/map"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/map")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Conflict Map
-            </Link>
-
-            <Link
-              to="/contact"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/contact")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Contact
-            </Link>
+            {simpleLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`text-sm font-medium transition-all duration-300 hover:text-news-primary hover:scale-105 ${
+                  isActive(link.path)
+                    ? "text-news-primary border-b-2 border-news-primary"
+                    : "text-news-dark dark:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
 
             {/* Dark Mode Toggle */}
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="ml-2 p-2 text-news-dark dark:text-white hover:text-news-primary"
+              className="ml-4 p-2 rounded-full hover:bg-news-primary/20 transition-colors"
               aria-label="Toggle theme"
-              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {darkMode ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-800 dark:text-white" />
+              )}
             </button>
           </nav>
 
           {/* Mobile Toggle */}
-          <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-news-primary/20 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
             {isMenuOpen ? (
               <X className="h-6 w-6 text-news-dark dark:text-white" />
             ) : (
@@ -172,89 +154,53 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-news-border space-y-2">
-            <Link
-              to="/about"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              to="/team"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Team
-            </Link>
-            <Link
-              to="/core-team"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Core Team
-            </Link>
-            <Link
-              to="/board"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Board of Advisor
-            </Link>
-            <Link
-              to="/emerging"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Emerging Technologies
-            </Link>
-            <Link
-              to="/disruptive"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Disruptive Defence Tech
-            </Link>
-            <Link
-              to="/hybrid"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Hybrid Warfare in Conflicts
-            </Link>
-            <Link
-              to="/economic-social"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Economic & Social Warfare
-            </Link>
-            <Link
-              to="/courses"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Courses
-            </Link>
-            <Link
-              to="/map"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Locations
-            </Link>
-            <Link
-              to="/contact"
-              className="block px-4 py-2 text-sm hover:text-news-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
+          <nav
+            ref={menuRef}
+            className="md:hidden py-4 border-t border-news-border space-y-2 bg-white dark:bg-gray-900"
+          >
+            {desktopMenus.map((menu) => (
+              <div key={menu.title} className="space-y-1">
+                <button
+                  className="w-full flex justify-between items-center px-4 py-2 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary transition-colors"
+                  onClick={() =>
+                    setOpenSubMenu(openSubMenu === menu.title ? null : menu.title)
+                  }
+                >
+                  {menu.title}
+                  <ChevronDown
+                    className={`w-4 h-4 transform transition-transform ${
+                      openSubMenu === menu.title ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {openSubMenu === menu.title &&
+                  menu.links.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      className="block px-6 py-2 text-sm text-news-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-news-primary rounded-md transition-all duration-200"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+              </div>
+            ))}
 
-            {/* Dark Mode Toggle in Mobile */}
+            {simpleLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="block px-4 py-2 text-sm text-news-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-news-primary rounded-md transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="ml-4 px-4 py-2 text-sm flex items-center gap-2 text-news-dark dark:text-white hover:text-news-primary"
+              className="w-full px-4 py-2 text-sm flex items-center gap-2 text-news-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-news-primary rounded-md transition-all duration-200"
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               {darkMode ? "Light Mode" : "Dark Mode"}

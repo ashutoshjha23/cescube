@@ -1,15 +1,15 @@
-import { motion, useViewportScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NewsCard from "@/components/NewsCard";
 import homepageImage from "@/assets/homepage.png";
 
 const IndexPage = () => {
   const navigate = useNavigate();
-  const { scrollY } = useViewportScroll();
+  const { scrollY } = useScroll();
 
   // Animations based on scroll
   const bgOpacity = useTransform(scrollY, [0, 300], [1, 0.7]);
-  const bgScale = useTransform(scrollY, [0, 300], [1.05, 1]); 
+  const bgScale = useTransform(scrollY, [0, 300], [1.05, 1]);
   const cardOpacity = useTransform(scrollY, [120, 350], [0, 1]);
   const cardY = useTransform(scrollY, [120, 350], [50, 0]);
 
@@ -19,11 +19,11 @@ const IndexPage = () => {
   ];
 
   const headlines = [
-    
+    // Add headline objects here
   ];
 
   const handleExploreClick = () => navigate("/emerging");
-  const handleTagClick = (tag) => navigate(`/emerging?tag=${encodeURIComponent(tag)}`);
+  const handleTagClick = (tag: string) => navigate(`/emerging?tag=${encodeURIComponent(tag)}`);
 
   return (
     <div className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-hidden">
@@ -36,6 +36,7 @@ const IndexPage = () => {
           scale: bgScale
         }}
       />
+
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-0" />
 
@@ -55,12 +56,12 @@ const IndexPage = () => {
             <p className="text-lg md:text-xl mb-8 max-w-md text-gray-200 drop-shadow-sm">
               Get the latest news and reports from across the globe — all in one place.
             </p>
+            {/* Frosted Glass Explore Button */}
             <motion.button
-              aria-label="Explore latest news"
               onClick={handleExploreClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              className="bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition"
+              className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300"
             >
               Explore News
             </motion.button>
@@ -80,7 +81,7 @@ const IndexPage = () => {
                   key={idx}
                   onClick={() => handleTagClick(tag)}
                   whileHover={{ scale: 1.05 }}
-                  className="px-4 py-2 text-sm rounded-full bg-white/20 backdrop-blur-sm cursor-pointer hover:bg-blue-500 hover:text-white transition shadow-sm"
+                  className="px-4 py-2 text-sm rounded-full bg-white/10 backdrop-blur-md cursor-pointer border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300"
                 >
                   {tag}
                 </motion.span>
@@ -113,3 +114,4 @@ const IndexPage = () => {
 };
 
 export default IndexPage;
+        

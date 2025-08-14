@@ -14,9 +14,6 @@ const BoardOfAdvisor = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Board of Advisors | CNAWS</title>
-      </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-news-light dark:bg-gray-900 px-4 py-12">
         <motion.div
