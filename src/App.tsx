@@ -9,8 +9,8 @@ import Footer from "@/components/Footer";
 
 // Pages
 import CoreTeam from "./pages/CoreTeam";
+import Course from "./pages/Course";
 import Index from "./pages/Index";
-import World from "./pages/World";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
@@ -34,10 +34,10 @@ const App = () => (
           <main style={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/world" element={<World />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/courses" element={<Course />} />
               <Route path="/board-of-advisor" element={<BoardOfAdvisor />} />
               <Route path="/board" element={<BoardOfAdvisor />} /> 
               <Route path="/emerging" element={<Emerging />} />

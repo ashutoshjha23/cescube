@@ -7,7 +7,7 @@ const sectionVariant = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const BoardOfAdvisor = () => {
+const Course = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -15,7 +15,7 @@ const BoardOfAdvisor = () => {
   return (
     <>
       <Helmet>
-        <title>Board of Advisors | CNAWS</title>
+        <title>Courses | CNAWS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-news-light dark:bg-gray-900 px-4 py-12">
@@ -26,7 +26,7 @@ const BoardOfAdvisor = () => {
           className="text-center"
         >
           <h1 className="text-4xl font-bold mb-4 text-news-dark dark:text-white">
-            Board of Advisors
+            Courses
           </h1>
           <p className="text-lg text-news-primary dark:text-gray-300">
             Coming Soon...
@@ -37,4 +37,4 @@ const BoardOfAdvisor = () => {
   );
 };
 
-export default BoardOfAdvisor;
+export default Course;

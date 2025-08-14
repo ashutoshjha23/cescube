@@ -19,16 +19,11 @@ const Header = () => {
   // Scroll listener for hide/show header
   useEffect(() => {
     let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 50) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
+      if (window.scrollY > lastScrollY && window.scrollY > 50) setHidden(true);
+      else setHidden(false);
       lastScrollY = window.scrollY;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -122,9 +117,9 @@ const Header = () => {
 
             {/* Main Links */}
             <Link
-              to="/sports"
+              to="/courses"
               className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/sports")
+                isActive("/courses")
                   ? "text-news-primary border-b-2 border-news-primary"
                   : "text-news-dark dark:text-white"
               }`}
@@ -140,7 +135,7 @@ const Header = () => {
                   : "text-news-dark dark:text-white"
               }`}
             >
-              Locations
+              Conflict Map
             </Link>
 
             <Link
@@ -235,7 +230,7 @@ const Header = () => {
               Economic & Social Warfare
             </Link>
             <Link
-              to="/sports"
+              to="/courses"
               className="block px-4 py-2 text-sm hover:text-news-primary"
               onClick={() => setIsMenuOpen(false)}
             >
