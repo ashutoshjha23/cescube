@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 const Contact = () => {
+  const contactEmail = "contact@cnaws.org"; // <-- Your contact email here
+
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-12">
@@ -13,6 +15,17 @@ const Contact = () => {
             <p className="text-muted-foreground text-lg">
               Have a question or feedback? Fill out the form below and we’ll get back to you.
             </p>
+          </div>
+
+          {/* Contact Email Section */}
+          <div className="mb-8 text-center bg-card border border-news-border rounded-2xl shadow-lg p-6">
+            <h2 className="text-2xl font-semibold text-news-dark mb-2">Reach us directly at:</h2>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="text-news-primary font-medium text-lg hover:underline"
+            >
+              {contactEmail}
+            </a>
           </div>
 
           {/* Contact Form */}
