@@ -37,11 +37,11 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="/team"
+                to="/board"
                 onClick={() => window.scrollTo(0, 0)}
                 className="hover:underline"
               >
-                Team
+                Board of Advisors
               </Link>
             </li>
             <li>

@@ -10,7 +10,7 @@ const Header = () => {
   const [hidden, setHidden] = useState(false);
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path;
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -22,10 +22,8 @@ const Header = () => {
 
     const handleScroll = () => {
       if (window.scrollY > lastScrollY && window.scrollY > 50) {
-        // Scrolling down
         setHidden(true);
       } else {
-        // Scrolling up
         setHidden(false);
       }
       lastScrollY = window.scrollY;
@@ -61,13 +59,28 @@ const Header = () => {
                 <ChevronDown className="w-4 h-4" />
               </div>
               <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-news-border shadow-md rounded-md z-50 min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link to="/about" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/about"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   About
                 </Link>
-                <Link to="/team" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/team"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Team
                 </Link>
-                <Link to="/board" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/core-team"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
+                  Core Team
+                </Link>
+                <Link
+                  to="/board"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Board of Advisor
                 </Link>
               </div>
@@ -80,16 +93,28 @@ const Header = () => {
                 <ChevronDown className="w-4 h-4" />
               </div>
               <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-news-border shadow-md rounded-md z-50 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link to="/emerging" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/emerging"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Strategic Foresight & Scenario Planning
                 </Link>
-                <Link to="/disruptive" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/disruptive"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Disruptive & Emerging Technologies
                 </Link>
-                <Link to="/hybrid" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/hybrid"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Hybrid Warfare & Irregular Conflict
                 </Link>
-                <Link to="/Economic" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                <Link
+                  to="/economic"
+                  className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary"
+                >
                   Economic & Resource Warfare
                 </Link>
               </div>
@@ -153,34 +178,81 @@ const Header = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-news-border space-y-2">
-            <Link to="/about" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/about"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               About
             </Link>
-            <Link to="/team" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/team"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Team
             </Link>
-            <Link to="/board" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/core-team"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Core Team
+            </Link>
+            <Link
+              to="/board"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Board of Advisor
             </Link>
-            <Link to="/emerging" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/emerging"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Emerging Technologies
             </Link>
-            <Link to="/disruptive" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/disruptive"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Disruptive Defence Tech
             </Link>
-            <Link to="/hybrid" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/hybrid"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Hybrid Warfare in Conflicts
             </Link>
-            <Link to="/economic-social" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/economic-social"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Economic & Social Warfare
             </Link>
-            <Link to="/sports" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/sports"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Courses
             </Link>
-            <Link to="/map" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/map"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Locations
             </Link>
-            <Link to="/contact" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link
+              to="/contact"
+              className="block px-4 py-2 text-sm hover:text-news-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Contact
             </Link>
 

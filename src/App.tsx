@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer"; 
 
 // Pages
+import CoreTeam from "./pages/CoreTeam";
 import Index from "./pages/Index";
 import World from "./pages/World";
 import Contact from "./pages/Contact";
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/hybrid" element={<Hybrid />} />
               <Route path="/economic" element={<Economic />} />
               <Route path="/map" element={<MapPage />} />
+              <Route path="/core-team" element={<CoreTeam />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

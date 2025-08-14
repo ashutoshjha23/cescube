@@ -19,34 +19,11 @@ const IndexPage = () => {
   ];
 
   const headlines = [
-    {
-      title: "Global Summit Focuses on Climate Crisis",
-      excerpt: "World leaders convene to address climate change policies and green energy investments.",
-      author: "Jane Doe",
-      publishedAt: "2h ago",
-      category: "Environment",
-      image: "/team/image2.avif"
-    },
-    {
-      title: "Cyberattack Hits Major Financial Institutions",
-      excerpt: "Several banks report data breaches in a coordinated cybersecurity assault.",
-      author: "John Smith",
-      publishedAt: "3h ago",
-      category: "Cybersecurity",
-      image: "https://source.unsplash.com/featured/?cybersecurity,hacking"
-    },
-    {
-      title: "Breakthrough in AI Research Stuns Tech Industry",
-      excerpt: "A new AI model sets benchmarks in natural language understanding and reasoning.",
-      author: "Alex Turner",
-      publishedAt: "4h ago",
-      category: "Technology",
-      image: "https://source.unsplash.com/featured/?AI,technology"
-    }
+    
   ];
 
-  const handleExploreClick = () => navigate("/news");
-  const handleTagClick = (tag) => navigate(`/news?tag=${encodeURIComponent(tag)}`);
+  const handleExploreClick = () => navigate("/emerging");
+  const handleTagClick = (tag) => navigate(`/emerging?tag=${encodeURIComponent(tag)}`);
 
   return (
     <div className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-hidden">
@@ -117,7 +94,6 @@ const IndexPage = () => {
           style={{ opacity: cardOpacity, y: cardY }}
           className="mt-12 mb-20"
         >
-          <h2 className="text-3xl font-bold mb-8">Top Headlines</h2>
           <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {headlines.map((article, index) => (
               <motion.div

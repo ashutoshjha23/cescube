@@ -59,7 +59,7 @@ const Team = () => {
 
         {/* Founder Section */}
         <motion.div initial="hidden" animate="show" variants={sectionVariant} className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 border-b border-muted pb-2">Founder</h2>
+          <h2 className="text-3xl font-semibold mb-6 border-b border-muted pb-2">Developers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamData.founder.map((member, index) => (
               <TeamCard key={index} member={member} />
@@ -67,25 +67,6 @@ const Team = () => {
           </div>
         </motion.div>
 
-        {/* Developers Section */}
-        <motion.div initial="hidden" animate="show" variants={sectionVariant} className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 border-b border-muted pb-2">Developers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamData.developers.map((member, index) => (
-              <TeamCard key={index} member={member} />
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Others Section */}
-        <motion.div initial="hidden" animate="show" variants={sectionVariant}>
-          <h2 className="text-3xl font-semibold mb-6 border-b border-muted pb-2">Other Members</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamData.others.map((member, index) => (
-              <TeamCard key={index} member={member} />
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );
