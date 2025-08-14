@@ -7,28 +7,49 @@ import logoDark from "@/assets/logoblack.png";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const location = useLocation();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path) => location.pathname === path;
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
+  // Scroll listener for hide/show header
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 50) {
+        // Scrolling down
+        setHidden(true);
+      } else {
+        // Scrolling up
+        setHidden(false);
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="bg-news-light dark:bg-gray-900 border-b border-news-border sticky top-0 z-50">
+    <header
+      className={`bg-news-light dark:bg-gray-900 border-b border-news-border sticky top-0 z-50 transition-transform duration-300 ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            {/* Keep the same size in both modes */}
             <img
               src={darkMode ? logoLight : logoDark}
               alt="CNAWS Logo"
               className="h-20 w-auto object-contain transition-all duration-300"
             />
-            {/* If you want text next to logo, add it here */}
-            {/* <span className="text-xl font-bold text-news-dark dark:text-white">CNAWS</span> */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -60,54 +81,21 @@ const Header = () => {
               </div>
               <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-news-border shadow-md rounded-md z-50 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <Link to="/emerging" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
-                  Emerging Technologies
+                  Strategic Foresight & Scenario Planning
                 </Link>
                 <Link to="/disruptive" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
-                  Disruptive Defence Tech
+                  Disruptive & Emerging Technologies
                 </Link>
                 <Link to="/hybrid" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
-                  Hybrid Warfare in Conflicts
+                  Hybrid Warfare & Irregular Conflict
                 </Link>
-                <Link to="/economic-social" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
-                  Economic & Social Warfare
+                <Link to="/Economic" className="block px-4 py-2 text-sm hover:bg-news-light hover:text-news-primary">
+                  Economic & Resource Warfare
                 </Link>
               </div>
             </div>
 
             {/* Main Links */}
-            <Link
-              to="/politics"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/politics")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Strategic Foreside and Scenario Planning
-            </Link>
-
-            <Link
-              to="/business"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/business")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Maximum Academic
-            </Link>
-
-            <Link
-              to="/technology"
-              className={`text-sm font-medium transition-colors hover:text-news-primary ${
-                isActive("/technology")
-                  ? "text-news-primary border-b-2 border-news-primary"
-                  : "text-news-dark dark:text-white"
-              }`}
-            >
-              Research
-            </Link>
-
             <Link
               to="/sports"
               className={`text-sm font-medium transition-colors hover:text-news-primary ${
@@ -119,7 +107,6 @@ const Header = () => {
               Courses
             </Link>
 
-            {/* NEW: Map / Locations */}
             <Link
               to="/map"
               className={`text-sm font-medium transition-colors hover:text-news-primary ${
@@ -187,19 +174,9 @@ const Header = () => {
             <Link to="/economic-social" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
               Economic & Social Warfare
             </Link>
-            <Link to="/politics" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
-              Strategic Foreside and Scenario Planning
-            </Link>
-            <Link to="/business" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
-              Maximum Academic
-            </Link>
-            <Link to="/technology" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
-              Research
-            </Link>
             <Link to="/sports" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
               Courses
             </Link>
-            {/* NEW: Map / Locations in Mobile */}
             <Link to="/map" className="block px-4 py-2 text-sm hover:text-news-primary" onClick={() => setIsMenuOpen(false)}>
               Locations
             </Link>

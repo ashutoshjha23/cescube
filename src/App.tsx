@@ -10,10 +10,6 @@ import Footer from "@/components/Footer";
 // Pages
 import Index from "./pages/Index";
 import World from "./pages/World";
-import Politics from "./pages/Politics";
-import Business from "./pages/Business";
-import Technology from "./pages/Technology";
-import Sports from "./pages/Sports";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
@@ -38,21 +34,17 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/world" element={<World />} />
-              <Route path="/politics" element={<Politics />} />
-              <Route path="/business" element={<Business />} />
-              <Route path="/technology" element={<Technology />} />
-              <Route path="/sports" element={<Sports />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/team" element={<Team />} />
               <Route path="/board-of-advisor" element={<BoardOfAdvisor />} />
-              <Route path="/board" element={<BoardOfAdvisor />} /> {/* optional alias */}
+              <Route path="/board" element={<BoardOfAdvisor />} /> 
               <Route path="/emerging" element={<Emerging />} />
               <Route path="/disruptive" element={<Disruptive />} />
               <Route path="/hybrid" element={<Hybrid />} />
               <Route path="/economic" element={<Economic />} />
-              <Route path="*" element={<NotFound />} />
               <Route path="/map" element={<MapPage />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />

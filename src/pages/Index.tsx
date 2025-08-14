@@ -1,10 +1,17 @@
-import { motion } from "framer-motion";
+import { motion, useViewportScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NewsCard from "@/components/NewsCard";
-import Footer from "@/components/Footer";
+import homepageImage from "@/assets/homepage.png";
 
 const IndexPage = () => {
   const navigate = useNavigate();
+  const { scrollY } = useViewportScroll();
+
+  // Animations based on scroll
+  const bgOpacity = useTransform(scrollY, [0, 300], [1, 0.7]);
+  const bgScale = useTransform(scrollY, [0, 300], [1.05, 1]); 
+  const cardOpacity = useTransform(scrollY, [120, 350], [0, 1]);
+  const cardY = useTransform(scrollY, [120, 350], [50, 0]);
 
   const tags = [
     "#BreakingNews", "#Politics", "#Tech", "#CyberSecurity",
@@ -38,52 +45,68 @@ const IndexPage = () => {
     }
   ];
 
-  const handleExploreClick = () => {
-    navigate("/news");
-  };
+  const handleExploreClick = () => navigate("/news");
+  const handleTagClick = (tag) => navigate(`/news?tag=${encodeURIComponent(tag)}`);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <main className="flex-grow px-6 py-12 md:px-12">
+    <div className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-hidden">
+      {/* Background with Parallax Zoom */}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${homepageImage})`,
+          opacity: bgOpacity,
+          scale: bgScale
+        }}
+      />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-0" />
+
+      <main className="flex-grow relative z-10 px-6 py-12 md:px-12">
         {/* Hero Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[75vh]">
           {/* Left Side */}
           <motion.div
-            initial={{ x: -40, opacity: 0 }}
+            initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7 }}
             className="flex flex-col justify-center"
           >
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
-              Stay Informed. Stay Ahead.
+            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg">
+              Stay Informed. <br /> Stay Ahead.
             </h1>
-            <p className="text-lg text-muted-foreground mb-6 max-w-md">
-              Get the latest news and reports from across the globe, all in one place.
+            <p className="text-lg md:text-xl mb-8 max-w-md text-gray-200 drop-shadow-sm">
+              Get the latest news and reports from across the globe — all in one place.
             </p>
-            <button
+            <motion.button
+              aria-label="Explore latest news"
               onClick={handleExploreClick}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold w-fit transition"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition"
             >
               Explore News
-            </button>
+            </motion.button>
           </motion.div>
 
-          {/* Right Side: Tags Card */}
+          {/* Right Side: Trending Tags */}
           <motion.div
-            initial={{ x: 40, opacity: 0 }}
+            initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="bg-card border border-muted rounded-xl p-6 shadow-lg"
+            transition={{ duration: 0.7 }}
+            className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-lg"
           >
             <h2 className="text-2xl font-semibold mb-4">Trending Tags</h2>
             <div className="flex flex-wrap gap-3">
               {tags.map((tag, idx) => (
-                <span
+                <motion.span
                   key={idx}
-                  className="bg-muted text-sm text-foreground px-3 py-1 rounded-full hover:bg-blue-100 cursor-pointer transition"
+                  onClick={() => handleTagClick(tag)}
+                  whileHover={{ scale: 1.05 }}
+                  className="px-4 py-2 text-sm rounded-full bg-white/20 backdrop-blur-sm cursor-pointer hover:bg-blue-500 hover:text-white transition shadow-sm"
                 >
                   {tag}
-                </span>
+                </motion.span>
               ))}
             </div>
           </motion.div>
@@ -91,10 +114,8 @@ const IndexPage = () => {
 
         {/* Headline Cards Section */}
         <motion.div
-          initial={{ y: 60, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-4 mb-16"
+          style={{ opacity: cardOpacity, y: cardY }}
+          className="mt-12 mb-20"
         >
           <h2 className="text-3xl font-bold mb-8">Top Headlines</h2>
           <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -103,8 +124,9 @@ const IndexPage = () => {
                 key={index}
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
+                className="shadow-xl rounded-2xl overflow-hidden bg-white text-gray-900"
               >
-                <NewsCard {...article} featured={index === 0} />
+                <NewsCard {...article} featured={index === 0} loading="lazy" />
               </motion.div>
             ))}
           </div>
