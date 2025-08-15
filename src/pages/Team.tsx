@@ -24,7 +24,7 @@ const CoreTeam = () => {
           className="text-center"
         >
           <h1 className="text-4xl font-bold mb-4 text-news-dark dark:text-white">
-            Core Team
+            Team
           </h1>
           <p className="text-lg text-news-primary dark:text-gray-300">
             Coming Soon...

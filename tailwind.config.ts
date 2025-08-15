@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config = {
-  darkMode: ["class"],
+  darkMode: ["class"], // enables toggling dark mode with 'dark' class
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

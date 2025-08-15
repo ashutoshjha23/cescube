@@ -51,7 +51,7 @@ const IndexPage = () => {
             className="flex flex-col justify-center"
           >
             <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg">
-              Stay Informed. <br /> Stay Ahead.
+              "Tracking Tomorrow's Battles Today" <br /> 
             </h1>
             <p className="text-lg md:text-xl mb-8 max-w-md text-gray-200 drop-shadow-sm">
               Get the latest news and reports from across the globe — all in one place.
@@ -63,7 +63,7 @@ const IndexPage = () => {
               whileTap={{ scale: 0.97 }}
               className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300"
             >
-              Explore News
+              Explore Insights
             </motion.button>
           </motion.div>
 
