@@ -110,7 +110,7 @@ const Footer = () => {
             </a>
           </p>
           <p className="text-sm text-gray-400 leading-relaxed mt-4">
-            &copy; {new Date().getFullYear()} <span className="font-semibold">CESCube</span>. All rights reserved.
+            &copy; {new Date().getFullYear()} <span className="font-semibold">CNAWS</span>. All rights reserved.
           </p>
         </div>
       </div>
