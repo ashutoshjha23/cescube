@@ -1,28 +1,34 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Mail, Linkedin } from "lucide-react"; // social icons
 import mohitImg from "@/assets/advisors/mohitimg.jpg";
 import shashankImg from "@/assets/advisors/shashankimg.jpg";
 import nikitaImg from "@/assets/advisors/nikitaimg.jpg";
 
 const coreTeam = [
   {
-    name: "Mohit Vashisth",
-    role: "Founder",
-    bio: `Mohit Vashisth is a Doctoral Research Fellow at Jindal School of International Affairs, O.P. Jindal Global University, Haryana, India. He was earlier associated with Max Security Solutions as a coordinator at Global Security Operations Centre (GSOC). At MAX, he was responsible for intelligence gathering, analysis, travel & security operations, and risk mitigation on a global scale during routine and emergency. He also has three years of experience working in the renewable energy sector. He is an engineering graduate with a major in Electronics and Communications and holds a Master’s degree in Political Science and International Affairs. His research areas are critical and disruptive defence technologies, counter-terrorism and Open-Source Intelligence (OSINT).`,
-    image: mohitImg,
-  },
-  {
     name: "Shashank Ranjan",
-    role: "Co-Founder",
+    role: "Director and Co-Founder",
     bio: `Colonel Shashank Ranjan (Retd) served in the Indian Army for 33 years as an Infantry Officer, including 15 years in Counter-Insurgency and Counter-Terrorism operations in Jammu & Kashmir and the North-East. He led defence diplomacy exercises with the US Marine Corps, UN Peacekeeping in Ethiopia-Eritrea, and disaster relief in J&K and the Andaman & Nicobar Islands. He held key instructional roles and managed modernization projects at Army HQ. A former Research Fellow at CLAWS, he authored Resolving India’s Maoist Challenge and has published extensively on terrorism and internal security. Col Ranjan frequently contributes to national dailies and is currently an Associate Professor of Practice at Jindal School of International Affairs, OP Jindal Global University.`,
     image: shashankImg,
+    email: "shashankranjan@cnaws.in",
+    linkedin: "https://www.linkedin.com/in/shashank-ranjan-282088a3/",
+  },
+  {
+    name: "Mohit Vashisth",
+    role: "Executive Director - Intelligence and Founder",
+    bio: `Mohit Vashisth is a Doctoral Research Fellow at Jindal School of International Affairs, O.P. Jindal Global University, Haryana, India. He was earlier associated with Max Security Solutions as a coordinator at Global Security Operations Centre (GSOC). At MAX, he was responsible for intelligence gathering, analysis, travel & security operations, and risk mitigation on a global scale during routine and emergency. He also has three years of experience working in the renewable energy sector. He is an engineering graduate with a major in Electronics and Communications and holds a Master’s degree in Political Science and International Affairs. His research areas are critical and disruptive defence technologies, counter-terrorism and Open-Source Intelligence (OSINT).`,
+    image: mohitImg,
+    email: "mohitvashisth@cnaws.in",
+    linkedin: "https://www.linkedin.com/in/mohit-vashisth-29a4501b1/",
   },
   {
     name: "Nikita Vats",
-    role: "Co-Founder",
+    role: "Executive Director - Research and Co-Founder",
     bio: `Nikita Vats is a PhD candidate in International Relations at the Jindal School of International Affairs, O.P. Jindal Global University, India. She previously served as a Research Associate at the National Maritime Foundation, where she contributed to maritime and strategic policy research. She holds a B.Sc. (Hons.) in Chemistry from the University of Delhi and an M.Sc. in Chemistry from Punjab University. She also holds a second Master’s degree in Political Science and International Relations. Her research interests span strategic affairs in the Indo-Pacific, India’s energy security, critical minerals, climate diplomacy, and emerging technology-related security issues. Her current doctoral research focuses on the geopolitics of energy transition and India's strategic imperatives in contemporary world politics.`,
     image: nikitaImg,
+    email: "nikitavats@cnaws.in",
+    linkedin: "https://www.linkedin.com/in/nikita-vats-1278101b8/",
   },
 ];
 
@@ -38,8 +44,6 @@ const CoreTeam = () => {
 
   return (
     <>
-
-
       <div className="min-h-screen bg-news-light dark:bg-gray-900 px-4 py-12">
         <div className="max-w-7xl mx-auto">
           <motion.h1
@@ -80,9 +84,33 @@ const CoreMemberCard = ({ member }) => {
           className="w-full h-full object-cover rounded-xl"
         />
       </div>
-      <h3 className="text-xl font-bold text-news-dark dark:text-white">{member.name}</h3>
-      <p className="text-news-primary text-sm mb-2">{member.role}</p>
-      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify">{member.bio}</p>
+      <h3 className="text-xl font-bold text-news-dark dark:text-white text-center">
+        {member.name}
+      </h3>
+      <p className="text-news-primary text-sm mb-2 text-center">{member.role}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify mb-4">
+        {member.bio}
+      </p>
+
+      {/* Contact Links */}
+      <div className="flex space-x-6 mt-2">
+        <a
+          href={`mailto:${member.email}`}
+          className="flex items-center text-gray-600 dark:text-gray-300 hover:text-news-primary transition"
+        >
+          <Mail size={18} className="mr-1" />
+          <span className="text-sm">Email</span>
+        </a>
+        <a
+          href={member.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center text-gray-600 dark:text-gray-300 hover:text-news-primary transition"
+        >
+          <Linkedin size={18} className="mr-1" />
+          <span className="text-sm">LinkedIn</span>
+        </a>
+      </div>
     </motion.div>
   );
 };

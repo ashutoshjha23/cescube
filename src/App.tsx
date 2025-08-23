@@ -21,6 +21,7 @@ import Disruptive from "./pages/Disruptive";
 import Hybrid from "./pages/Hybrid";
 import Economic from "./pages/Economic";
 import MapPage from "./pages/MapPage";
+import Gathering from "./pages/Gathering"; 
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/economic" element={<Economic />} />
               <Route path="/map" element={<MapPage />} />
               <Route path="/core-team" element={<CoreTeam />} />
+              <Route path="/gathering" element={<Gathering />} /> 
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

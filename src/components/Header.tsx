@@ -47,18 +47,19 @@ const Header = () => {
       title: "Who Are We",
       links: [
         { label: "About", path: "/about" },
-        { label: "Team", path: "/team" },
         { label: "Core Team", path: "/core-team" },
-        { label: "Board of Advisor", path: "/board" },
+        { label: "Team", path: "/team" },
+        { label: "Board of Advisors", path: "/board" },
       ],
     },
     {
-      title: "Department Desk",
+      title: "Gatherings",
       links: [
-        { label: "Strategic Foresight & Scenario Planning", path: "/emerging" },
-        { label: "Disruptive & Emerging Technologies", path: "/disruptive" },
         { label: "Hybrid Warfare & Irregular Conflict", path: "/hybrid" },
+        { label: "Disruptive & Emerging Technologies", path: "/disruptive" },
         { label: "Economic & Resource Warfare", path: "/economic" },
+        { label: "Strategic Foresight & Scenario Planning", path: "/emerging" },
+        { label: "Intelligence Gathering & Analysis", path: "/gathering" },
       ],
     },
   ];
@@ -77,7 +78,8 @@ const Header = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16">
-          {/* Logo */}
+          
+          {/* Left: Logo */}
           <Link
             to="/"
             className="flex items-center space-x-2 transform transition-transform duration-300 hover:scale-105"
@@ -89,8 +91,8 @@ const Header = () => {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+          {/* Center: Navigation */}
+          <nav className="hidden md:flex items-center space-x-6 mx-auto">
             {desktopMenus.map((menu, idx) => (
               <div key={idx} className="relative group">
                 <div className="flex items-center gap-1 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary cursor-pointer transition-colors duration-200">
@@ -124,20 +126,20 @@ const Header = () => {
                 {link.label}
               </Link>
             ))}
-
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="ml-4 p-2 rounded-full hover:bg-news-primary/20 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {darkMode ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
-              ) : (
-                <Moon className="w-5 h-5 text-gray-800 dark:text-white" />
-              )}
-            </button>
           </nav>
+
+          {/* Right: Dark Mode Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="hidden md:block ml-4 p-2 rounded-full hover:bg-news-primary/20 transition-colors"
+            aria-label="Toggle theme"
+          >
+            {darkMode ? (
+              <Sun className="w-5 h-5 text-yellow-400" />
+            ) : (
+              <Moon className="w-5 h-5 text-gray-800 dark:text-white" />
+            )}
+          </button>
 
           {/* Mobile Toggle */}
           <button
@@ -198,6 +200,7 @@ const Header = () => {
               </Link>
             ))}
 
+            {/* Dark Mode Toggle */}
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="w-full px-4 py-2 text-sm flex items-center gap-2 text-news-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-news-primary rounded-md transition-all duration-200"
