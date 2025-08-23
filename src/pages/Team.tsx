@@ -11,7 +11,7 @@ import UmangImg from "@/assets/advisors/umangimg.jpg";
 const teamMembers = [
   {
     name: "Arpan A. Chakravarty",
-    role: "Research Fellow",
+    role: "Visiting Research Fellow",
     bio: `Arpan A. Chakravarty is a Research Fellow at the India Foundation. Currently, he is a Non-Resident Fellow at the Pune International Centre for National Security Studies and has been a Fellow of the Founding Cohort of the Network for Advanced Studies on Pakistan (NASP) at the Takshashila Institute, Bengaluru.
 
 His research interests focus on India’s neighbourhood, which he approaches through his strong grounding in law and national security. In the past, he has assisted members of the National Security Advisory Board and has had the opportunity to serve at institutions that play a vital role in nation-building, including Rashtriya Raksha University, Gandhinagar (an Institute of National Importance), and the Indian Institute of Science (IISc), Bengaluru, in various capacities. He is proficient in multiple languages. He can be reached at arpan.chak13@gmail.com.`,
@@ -29,7 +29,7 @@ She has presented her research at international conferences in countries includi
   },
   {
     name: "Anushka Saraswat",
-    role: "White-Collar Crime & National Security Law Scholar",
+    role: "Visiting Research Fellow",
     bio: `Anushka Saraswat is a White-Collar Crime & National Security Law Scholar and a Consultant on International Law, Counter-Terrorism Law, Lawfare and International Disputes. She has worked on the prosecution side in cases of anti-money laundering, anti-corruption, and tax evasion at the Supreme Court of India, High Courts, and Special Courts. 
 
 She served as a core member at the Civil 20 Working Group on Human Rights during India’s G20 Presidency, and as a Young Professional at Vivekananda International Foundation (VIF India). She was also a Research Intern at Centre for Land Warfare Studies (CLAWS). A graduate of O.P. Jindal Global University, she holds certifications from the United Nations Office of Drugs and Crime (UNODC). 

@@ -53,7 +53,7 @@ const Header = () => {
       ],
     },
     {
-      title: "Gatherings",
+      title: "Departments Desk",
       links: [
         { label: "Hybrid Warfare & Irregular Conflict", path: "/hybrid" },
         { label: "Disruptive & Emerging Technologies", path: "/disruptive" },
