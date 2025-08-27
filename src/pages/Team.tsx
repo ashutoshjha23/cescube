@@ -3,10 +3,18 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import ArpanImg from "@/assets/advisors/Arpanimg.jpg";
 import DivyaImg from "@/assets/advisors/Divyaimg.jpg";
-
-// Add placeholder image imports (replace with actual images)
 import AnushkaImg from "@/assets/advisors/anushkaimg.jpg";
 import UmangImg from "@/assets/advisors/umangimg.jpg";
+
+// New members – replace with actual images
+import AlakshendraImg from "@/assets/advisors/alakshedraimg.jpg";
+import KhushiImg from "@/assets/advisors/khushiimg.jpg";
+import AImg from "@/assets/advisors/aimg.jpg";
+import JImg from "@/assets/advisors/jimg.jpg";
+import DImg from "@/assets/advisors/dimg.jpg";
+import SImg from "@/assets/advisors/simg.jpg";
+import BhavneetImg from "@/assets/advisors/prajiimg.jpg";
+import AshutoshImg from "@/assets/advisors/ashuimg.jpg";
 
 const teamMembers = [
   {
@@ -46,6 +54,54 @@ His acclaimed book, *In The Times of Article 370*, is based on his Kashmir count
 
 His areas of expertise span Geo-politics, Defence, Finance, International Trade, Environment, Agriculture, Cyber Security, Risk Management, Public Relations, and Policy Formulation.`,
     image: UmangImg,
+  },
+  {
+    name: "Alakshendra Singh",
+    role: "Young Research Fellow",
+    bio: `Alakshendra Singh is a third-year B.A. (Hons.) Global Affairs with a specialisation in national security and defence and a minor in Public Policy. He is an aspiring China specialist with A1 level proficiency in Mandarin, along with extensive research into the South China Sea, South Asian Power Dynamics, and Indian hard power capabilities. He is further exploring his interest in OSINT as a supplement to conventional IR.`,
+    image: AlakshendraImg,
+  },
+  {
+    name: "Khushi Jain",
+    role: "Research Fellow",
+    bio: `Khushi Jain is a researcher specialising in information warfare, extremist narratives, and South Asian security dynamics. She holds an MA in International Relations from King's College London, where her dissertation examined how Egyptian leaders strategically employed identity narratives as tools of statecraft. She has conducted open-source intelligence research on militant organisations in Kashmir, focusing on propaganda strategies and recruitment mechanisms. She has over 2 years of experience in strategic communications and public relations. Contact: khushijain0299@gmail.com.`,
+    image: KhushiImg,
+  },
+  {
+    name: "A",
+    role: "Head, Pakistan Desk, Department of Intelligence Gathering and Analysis (CNAWS)",
+    bio: `A serves as the Head of the Pakistan Desk at CNAWS, leading research on terrorist organisations such as Lashkar-e-Taiba (LeT) and Jaish-e-Mohammed (JeM). Beyond counter-terrorism analysis, A tracks Pakistan’s political and security environment and offers assessments shaping regional stability and India’s national security.`,
+    image: AImg,
+  },
+  {
+    name: "J",
+    role: "Head, Geo-Intelligence Desk, Department of Intelligence Gathering and Analysis (CNAWS)",
+    bio: `J leads the Geo-Intelligence Desk at CNAWS, specializing in monitoring terrorist infiltration patterns, key infiltration points, and transit routes across sensitive regions. Well-versed in advanced GIS tools, J produces data-driven maps and visual intelligence products.`,
+    image: JImg,
+  },
+  {
+    name: "D",
+    role: "Cyber Security Analyst, CNAWS",
+    bio: `D serves as a Cyber Security Analyst at CNAWS, monitoring cyber operations emerging from Pakistan. D tracks hostile cyber activities and online propaganda while overseeing CNAWS’s internal cyber security framework.`,
+    image: DImg,
+  },
+  {
+    name: "S",
+    role: "Intelligence Analyst, Department of Intelligence Gathering and Analysis (CNAWS)",
+    bio: `S works as an Intelligence Analyst at CNAWS, monitoring separatist and political organisations connected to Pakistan, Jammu & Kashmir, and Punjab. S also conducts sentiment analysis and narrative studies to enrich CNAWS’s intelligence outputs.`,
+    image: SImg,
+  },
+  {
+    name: "Bhavneet Singh Ahuja",
+    role: "Web Developer & AI/ML Analyst",
+    bio: `Bhavneet Singh Ahuja is a Computer Science undergraduate at SRM Institute of Science and Technology with experience in full-stack development and AI/ML. He has worked on projects including carbon emission prediction systems and AI-powered legal automation tools. His interests include technology policy, cybersecurity, sustainable computing, and AI in media.`,
+    image: BhavneetImg,
+  },
+  {
+    name: "Ashutosh Jha",
+    role: "Web Developer & AI/ML Analyst",
+    bio: `Ashutosh Jha is a B.Tech Computer Science and Engineering student at SRM Institute of Science and Technology with hands-on experience in full-stack development, machine learning, and sustainable computing. He has interned with Tata BlueScope Steel and Bharat Intern, working on modern web applications and ML-based projects including a real-time carbon emission prediction system. He has strong problem-solving and teamwork skills.`,
+    image: AshutoshImg,
   }
 ];
 
@@ -60,31 +116,29 @@ const Team = () => {
   }, []);
 
   return (
-    <>
-      <div className="min-h-screen bg-news-light dark:bg-gray-900 px-4 py-12">
-        <div className="max-w-7xl mx-auto">
-          <motion.h1
-            initial="hidden"
-            animate="show"
-            variants={sectionVariant}
-            className="text-4xl font-bold text-center mb-12 text-news-dark dark:text-white"
-          >
-            Team
-          </motion.h1>
+    <div className="min-h-screen bg-news-light dark:bg-gray-900 px-4 py-12">
+      <div className="max-w-7xl mx-auto">
+        <motion.h1
+          initial="hidden"
+          animate="show"
+          variants={sectionVariant}
+          className="text-4xl font-bold text-center mb-12 text-news-dark dark:text-white"
+        >
+          Team
+        </motion.h1>
 
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={sectionVariant}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center"
-          >
-            {teamMembers.map((member, index) => (
-              <TeamMemberCard key={index} member={member} />
-            ))}
-          </motion.div>
-        </div>
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={sectionVariant}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center"
+        >
+          {teamMembers.map((member, index) => (
+            <TeamMemberCard key={index} member={member} />
+          ))}
+        </motion.div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -92,8 +146,7 @@ const TeamMemberCard = ({ member }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
-      className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 transition-all duration-300 
-                 border border-news-border dark:border-none flex flex-col items-center max-w-sm mx-auto"
+      className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 transition-all duration-300 border border-news-border dark:border-none flex flex-col items-center max-w-sm mx-auto"
     >
       <div className="w-full h-[400px] mb-4 rounded-xl overflow-hidden">
         <img
@@ -105,12 +158,8 @@ const TeamMemberCard = ({ member }) => {
       <h3 className="text-xl font-bold text-news-dark dark:text-white text-center">
         {member.name}
       </h3>
-      <p className="text-news-primary text-sm mb-2 text-center">
-        {member.role}
-      </p>
-      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify">
-        {member.bio}
-      </p>
+      <p className="text-news-primary text-sm mb-2 text-center">{member.role}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify">{member.bio}</p>
     </motion.div>
   );
 };

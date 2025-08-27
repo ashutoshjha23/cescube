@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import advisorImg from "@/assets/advisors/shekharimg.jpg";
-import sreeramImg from "@/assets/advisors/sreeramimg.jpg"; // Add Sreeram image
+import sreeramImg from "@/assets/advisors/sreeramimg.jpg"; 
+import poojaImg from "@/assets/advisors/poojaimg.jpg"; // Add Pooja image
 
 const sectionVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -31,6 +32,14 @@ const advisors = [
     an MSc. in History of International Relations from LSE (UK), and a B.A. in Modern History from Oxford University (UK). 
     He has authored 1000+ articles in leading newspapers, regularly appears on global media, and hosts the weekly TV show *Indian Diplomacy* on DD India.`,
   },
+  {
+    name: "Dr. Pooja Arora",
+    title: "Assistant Professor, Jindal School of International Studies | Policy Consultant & AI Trainer",
+    image: poojaImg,
+    description: `Dr. Pooja Arora is an Assistant Professor at the Jindal School of International Studies and a policy consultant whose work navigates the crossroads of international political economy, security, emerging technologies, and strategic diplomacy. She has advised the Digital Transformations Lab at the German Institute for Global and Area Studies and works as a freelance AI trainer focused on ethical annotation and mitigating biases in AI systems.
+
+She earned an MSc in International Political Economy from the London School of Economics and an MA with distinction in Political Science and International Relations from Indira Gandhi National Open University. Pooja is the co-founder of The Pax Indica newsletter, has published extensively, and actively engages in policy advocacy and scholarly discourse. She is also an award-winning game designer, with designs simulating India’s electoral process, counterfactual history, and international trade strategy for students.`,
+  }
 ];
 
 const BoardOfAdvisor = () => {
@@ -40,7 +49,6 @@ const BoardOfAdvisor = () => {
 
   return (
     <>
-
       <div className="min-h-screen bg-news-light dark:bg-gray-900 px-6 py-16 flex flex-col items-center">
         {/* Heading */}
         <motion.div
@@ -52,7 +60,6 @@ const BoardOfAdvisor = () => {
           <h1 className="text-5xl font-extrabold mb-4 text-news-dark dark:text-white">
             Board of Advisors
           </h1>
-
         </motion.div>
 
         {/* Advisor Cards */}

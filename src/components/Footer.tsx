@@ -40,6 +40,15 @@ const Footer = () => {
             </li>
             <li>
               <Link
+                to="/core-team"
+                onClick={() => window.scrollTo(0, 0)}
+                className="hover:underline hover:text-blue-400"
+              >
+                Core Team
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/contact"
                 onClick={() => window.scrollTo(0, 0)}
                 className="hover:underline hover:text-blue-400"
@@ -50,10 +59,10 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Popular Categories */}
+        {/* Department */}
         <div>
           <h3 className="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">
-            Categories
+            Department
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -90,6 +99,15 @@ const Footer = () => {
                 className="hover:underline hover:text-blue-400"
               >
                 Economic & Resource Warfare
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/gathering"
+                onClick={() => window.scrollTo(0, 0)}
+                className="hover:underline hover:text-blue-400"
+              >
+                Department of Intelligence Gathering & Analysis
               </Link>
             </li>
           </ul>

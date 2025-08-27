@@ -1,68 +1,70 @@
-import { Clock, User } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface NewsCardProps {
+  id: number;
   title: string;
-  excerpt: string;
-  author: string;
-  publishedAt: string;
-  category: string;
-  image?: string;
-  featured?: boolean;
+  content: string;
+  image_url?: string;
+  author?: string;
+  created_at?: string;
 }
 
-const NewsCard = ({
+const NewsCard: React.FC<NewsCardProps> = ({
+  id,
   title,
-  excerpt,
+  content,
+  image_url,
   author,
-  publishedAt,
-  category,
-  image,
-  featured = false,
-}: NewsCardProps) => {
+  created_at,
+}) => {
+  const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleClick = () => {
+    navigate(`/article/${id}`);
+  };
+
   return (
-    <article
-      className={`bg-card border border-news-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${
-        featured ? "md:col-span-2 md:row-span-2" : ""
-      }`}
+    <motion.div
+      className="cursor-pointer flex flex-col h-full rounded-2xl shadow-lg overflow-hidden bg-white dark:bg-gray-800"
+      onClick={handleClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {image && (
-        <div className={`relative ${featured ? "h-64" : "h-48"} overflow-hidden`}>
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          />
-          <div className="absolute top-3 left-3">
-            <span className="bg-news-primary text-news-light px-2 py-1 text-xs font-medium rounded">
-              {category}
-            </span>
-          </div>
-        </div>
-      )}
-      
-      <div className="p-6">
-        <h2
-          className={`font-bold text-news-dark mb-3 leading-tight hover:text-news-primary transition-colors cursor-pointer ${
-            featured ? "text-2xl" : "text-lg"
+      {/* Article Image */}
+      <div className="relative w-full h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
+        {!imageLoaded && <div className="absolute inset-0 bg-gray-300 animate-pulse" />}
+        <img
+          src={
+            image_url
+              ? `https://cnaws.in/api/${image_url}`
+              : "/placeholder.png" // fallback image
+          }
+          alt={title}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
           }`}
-        >
-          {title}
-        </h2>
-        
-        <p className="text-muted-foreground mb-4 line-clamp-3">{excerpt}</p>
-        
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center space-x-2">
-            <User className="h-4 w-4" />
-            <span>{author}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Clock className="h-4 w-4" />
-            <span>{publishedAt}</span>
-          </div>
+          onLoad={() => setImageLoaded(true)}
+        />
+      </div>
+
+      {/* Article Info */}
+      <div className="flex-1 p-4 flex flex-col justify-between">
+        <div>
+          <h3 className="text-lg font-bold mb-2 line-clamp-2">{title}</h3>
+          <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
+            {content.replace(/<[^>]+>/g, "").slice(0, 150)}...
+          </p>
+        </div>
+
+        <div className="mt-4 flex justify-between items-center text-gray-500 text-xs">
+          {author && <span>{author}</span>}
+          {created_at && <span>{new Date(created_at).toLocaleDateString()}</span>}
         </div>
       </div>
-    </article>
+    </motion.div>
   );
 };
 
