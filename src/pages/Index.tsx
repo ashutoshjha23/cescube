@@ -30,19 +30,17 @@ const IndexPage = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch articles from backend
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
     const fetchArticles = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/articles_get.php?t=${Date.now()}`, {
-          credentials: "include", // important!
+        const res = await fetch(`https://cnaws.in/api/articles_get.php?t=${Date.now()}`, {
+          credentials: "include",
           signal,
         });
         const data = await res.json();
-
         if (data.success) setArticles(data.articles || []);
         else console.error("Failed to fetch articles:", data.message);
       } catch (err) {

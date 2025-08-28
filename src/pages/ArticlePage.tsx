@@ -13,15 +13,8 @@ interface Article {
   created_at?: string;
 }
 
-const fetchArticle = async (id: string) => {
-  const res = await fetch(`https://cnaws.in/api/articles_get.php`);
-  if (!res.ok) throw new Error(`Failed to fetch article: ${res.status}`);
-  const json = await res.json();
-  const article = json.articles.find((a: Article) => a.id.toString() === id);
-  return article;
-};
-
-const fetchAllArticles = async () => {
+// Fetch all articles (we filter client-side for single + related)
+const fetchArticles = async () => {
   const res = await fetch(`https://cnaws.in/api/articles_get.php`);
   if (!res.ok) throw new Error(`Failed to fetch articles: ${res.status}`);
   const json = await res.json();
@@ -37,25 +30,20 @@ const ArticlePage: React.FC = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
+  const { data: articles, isLoading, error } = useQuery({
+    queryKey: ["articles"],
+    queryFn: fetchArticles,
+    staleTime: 1000 * 60 * 5,
+  });
+
   if (!id) return <p className="text-center mt-10 text-red-500">Invalid article ID</p>;
-
-  const { data: article, isLoading, error } = useQuery({
-    queryKey: ["article", id],
-    queryFn: () => fetchArticle(id),
-    staleTime: 1000 * 60 * 5,
-  });
-
-  const { data: allArticles } = useQuery({
-    queryKey: ["all-articles"],
-    queryFn: fetchAllArticles,
-    staleTime: 1000 * 60 * 5,
-  });
-
   if (isLoading) return <p className="text-center mt-10 text-gray-500">Loading article...</p>;
-  if (error || !article)
-    return <p className="text-center mt-10 text-red-500">Error loading article. Please try again later.</p>;
+  if (error || !articles) return <p className="text-center mt-10 text-red-500">Error loading article.</p>;
 
-  const relatedArticles = allArticles?.filter((a) => a.id !== article.id).slice(0, 3) ?? [];
+  const article = articles.find((a) => a.id.toString() === id);
+  if (!article) return <p className="text-center mt-10 text-red-500">Article not found.</p>;
+
+  const relatedArticles = articles.filter((a) => a.id !== article.id).slice(0, 3);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -83,6 +71,7 @@ const ArticlePage: React.FC = () => {
             }`}
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
+            onError={(e) => (e.currentTarget.src = "/placeholder.png")}
           />
           <div className="absolute inset-0 bg-black/20" />
         </motion.div>

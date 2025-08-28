@@ -34,6 +34,7 @@ const queryClient = new QueryClient();
 // --- Auth Context ---
 interface AuthContextType {
   isAdmin: boolean;
+  isLoading: boolean;
   setIsAdmin: (val: boolean) => void;
   logout: () => Promise<void>;
 }
@@ -53,7 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/auth_check.php", {
+        const res = await fetch("https://cnaws.in/api/auth_check.php", {
           credentials: "include",
         });
         const data = await res.json();
@@ -68,12 +69,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = async () => {
-    await fetch("http://localhost:8080/api/logout.php", { credentials: "include" });
+    try {
+      await fetch("https://cnaws.in/api/logout.php", { credentials: "include" });
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
     setIsAdmin(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAdmin, setIsAdmin, logout }}>
+    <AuthContext.Provider value={{ isAdmin, setIsAdmin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -81,8 +86,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 // --- Protected Route ---
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAdmin } = useAuth();
-  if (isAdmin === null) return <p>Loading...</p>;
+  const { isAdmin, isLoading } = useAuth();
+
+  if (isLoading) return <p>Loading...</p>; // show while checking auth
   return isAdmin ? children : <Navigate to="/admin/login" replace />;
 };
 

@@ -21,6 +21,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleClick = () => {
     navigate(`/article/${id}`);
@@ -33,24 +34,28 @@ const NewsCard: React.FC<NewsCardProps> = ({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Article Image */}
+      {/* Image */}
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
-        {!imageLoaded && <div className="absolute inset-0 bg-gray-300 animate-pulse" />}
+        {!imageLoaded && !imageError && (
+          <div className="absolute inset-0 bg-gray-300 animate-pulse" />
+        )}
         <img
           src={
-            image_url
+            !imageError && image_url
               ? `https://cnaws.in/api/${image_url}`
-              : "/placeholder.png" // fallback image
+              : "/placeholder.png"
           }
           alt={title}
           className={`w-full h-full object-cover transition-opacity duration-500 ${
             imageLoaded ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          loading="lazy"
         />
       </div>
 
-      {/* Article Info */}
+      {/* Info */}
       <div className="flex-1 p-4 flex flex-col justify-between">
         <div>
           <h3 className="text-lg font-bold mb-2 line-clamp-2">{title}</h3>
@@ -61,7 +66,9 @@ const NewsCard: React.FC<NewsCardProps> = ({
 
         <div className="mt-4 flex justify-between items-center text-gray-500 text-xs">
           {author && <span>{author}</span>}
-          {created_at && <span>{new Date(created_at).toLocaleDateString()}</span>}
+          {created_at && (
+            <span>{new Date(created_at).toLocaleDateString()}</span>
+          )}
         </div>
       </div>
     </motion.div>
