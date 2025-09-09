@@ -10,10 +10,17 @@ interface Article {
   content?: string;
   image_url?: string;
   author?: string;
+  author_details?: {
+    id?: number;
+    name: string;
+    description?: string;
+    image_url?: string;
+  };
   created_at?: string;
+  tags?: string[];
 }
 
-// Fetch all articles (we filter client-side for single + related)
+// Fetch all articles
 const fetchArticles = async () => {
   const res = await fetch(`https://cnaws.in/api/articles_get.php`);
   if (!res.ok) throw new Error(`Failed to fetch articles: ${res.status}`);
@@ -43,7 +50,26 @@ const ArticlePage: React.FC = () => {
   const article = articles.find((a) => a.id.toString() === id);
   if (!article) return <p className="text-center mt-10 text-red-500">Article not found.</p>;
 
-  const relatedArticles = articles.filter((a) => a.id !== article.id).slice(0, 3);
+  // Related articles: only those with at least one matching tag
+  const relatedArticles = articles
+    .filter((a) => a.id !== article.id && a.tags && article.tags && a.tags.some(tag => article.tags!.includes(tag)))
+    .slice(0, 3);
+
+  // Construct author image URL properly
+  const getAuthorImageUrl = (author?: { image_url?: string }) => {
+    if (!author?.image_url) return "/default-avatar.png";
+    // If already a full URL
+    if (author.image_url.startsWith("http")) return author.image_url;
+    // If already starts with /uploads or uploads, just prefix domain
+    if (author.image_url.startsWith("/uploads/")) {
+      return `https://cnaws.in/api${author.image_url}`;
+    }
+    if (author.image_url.startsWith("uploads/")) {
+      return `https://cnaws.in/api/${author.image_url}`;
+    }
+    // Otherwise, assume it's just the filename
+    return `https://cnaws.in/api/uploads/authors/${author.image_url}`;
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -54,6 +80,7 @@ const ArticlePage: React.FC = () => {
         &larr; Back to Articles
       </button>
 
+      {/* Article Image */}
       {article.image_url && (
         <motion.div
           className="w-full relative mb-8 rounded-3xl overflow-hidden shadow-lg bg-gray-200 dark:bg-gray-800"
@@ -77,16 +104,21 @@ const ArticlePage: React.FC = () => {
         </motion.div>
       )}
 
+      {/* Title */}
       <motion.h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
         {article.title}
       </motion.h1>
 
+      {/* Author & Date */}
       <motion.div className="flex flex-wrap items-center text-gray-500 dark:text-gray-400 text-sm mb-8 gap-4">
-        {article.author && <span className="font-semibold">{article.author}</span>}
+        {article.author_details?.name && (
+          <span>{article.author_details.name}</span>
+        )}
         {article.created_at && <span>{new Date(article.created_at).toLocaleDateString()}</span>}
       </motion.div>
 
-      <motion.div className="prose max-w-full text-gray-800 dark:text-gray-100">
+      {/* Content */}
+      <motion.div className="prose max-w-full text-gray-800 dark:text-gray-100 quill-content">
         {article.content ? (
           <div
             className="dark-prose"
@@ -101,12 +133,52 @@ const ArticlePage: React.FC = () => {
         )}
       </motion.div>
 
+      {/* Tags */}
+      {article.tags && article.tags.length > 0 && (
+        <div className="mt-10">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tags:</h3>
+          <div className="flex flex-wrap gap-2">
+            {article.tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 rounded-full text-sm"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+
+
+      {/* Author Card */}
+      {article.author_details && (
+        <div className="mt-20 p-6 bg-gray-100 dark:bg-gray-900 rounded-2xl shadow flex flex-row items-center gap-6 max-w-2xl mx-auto">
+          <img
+            src={getAuthorImageUrl(article.author_details)}
+            alt={article.author_details.name}
+            className="w-28 h-28 rounded-xl object-cover border-2 border-blue-500 flex-shrink-0"
+            style={{ objectFit: 'cover' }}
+            onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
+          />
+          <div className="flex-1">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-widest mb-1 block">AUTHOR</span>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{article.author_details.name}</h3>
+            {article.author_details.description && (
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{article.author_details.description}</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <div className="mt-16">
           <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Related Articles</h2>
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {relatedArticles.map((ra) => (
-              <NewsCard key={ra.id} {...ra} />
+              <NewsCard key={ra.id} {...ra} content={ra.content || ""} />
             ))}
           </div>
         </div>

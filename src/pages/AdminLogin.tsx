@@ -2,7 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/App";
 
-export default function Login() {
+// Hide global footer when admin login is rendered
+const hideFooterStyle = `
+  <style>
+    footer, .footer, #footer { display: none !important; }
+  </style>
+`;
+
+function Login() {
   const { setIsAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -59,7 +66,9 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-gray-100 rounded shadow">
+    <>
+      <div dangerouslySetInnerHTML={{ __html: hideFooterStyle }} />
+      <div className="max-w-md mx-auto mt-20 p-6 bg-gray-100 rounded shadow">
       <h2 className="text-2xl mb-4">Admin Login</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <input
@@ -85,6 +94,9 @@ export default function Login() {
       >
         {loading ? "Logging in..." : "Login"}
       </button>
-    </div>
+      </div>
+    </>
   );
 }
+
+export default Login;

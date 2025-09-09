@@ -9,6 +9,10 @@ interface NewsCardProps {
   image_url?: string;
   author?: string;
   created_at?: string;
+  author_details?: {
+    name: string;
+    image_url?: string;
+  };
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
@@ -18,6 +22,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   image_url,
   author,
   created_at,
+  author_details,
 }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -34,7 +39,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Image */}
+      {/* Article Image */}
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-gray-300 animate-pulse" />
@@ -64,8 +69,13 @@ const NewsCard: React.FC<NewsCardProps> = ({
           </p>
         </div>
 
+        {/* Author & Date */}
         <div className="mt-4 flex justify-between items-center text-gray-500 text-xs">
-          {author && <span>{author}</span>}
+          {author_details?.name && (
+            <div className="flex items-center gap-2">
+              <span>{author_details.name}</span>
+            </div>
+          )}
           {created_at && (
             <span>{new Date(created_at).toLocaleDateString()}</span>
           )}

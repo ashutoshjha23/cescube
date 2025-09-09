@@ -106,3 +106,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Quill font size and font family support for article content */
+.quill-content .ql-size-small { font-size: 0.75em; }
+.quill-content .ql-size-large { font-size: 1.5em; }
+.quill-content .ql-size-huge { font-size: 2.5em; }
+.quill-content .ql-font-serif { font-family: serif; }
+.quill-content .ql-font-monospace { font-family: monospace; }
+
+/* Optional: ensure all font sizes are respected */
+.quill-content [class^="ql-size-"] {
+  line-height: 1.4;
+}
