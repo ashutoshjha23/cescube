@@ -363,7 +363,13 @@ const Team = () => {
   );
 };
 
+import React, { useState } from "react";
+
 const TeamMemberCard = ({ member }) => {
+  const [expanded, setExpanded] = useState(false);
+  const previewLength = 300;
+  const isLong = member.bio.length > previewLength;
+  const preview = isLong ? member.bio.slice(0, previewLength) + "..." : member.bio;
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
@@ -380,7 +386,17 @@ const TeamMemberCard = ({ member }) => {
         {member.name}
       </h3>
       <p className="text-news-primary text-sm mb-2 text-center">{member.role}</p>
-      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify">{member.bio}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm text-justify">
+        {expanded || !isLong ? member.bio : preview}
+      </p>
+      {isLong && (
+        <button
+          className="mt-2 self-start text-blue-600 dark:text-blue-400 hover:underline font-medium text-sm"
+          onClick={() => setExpanded((prev) => !prev)}
+        >
+          {expanded ? "Read Less" : "Read More"}
+        </button>
+      )}
     </motion.div>
   );
 };

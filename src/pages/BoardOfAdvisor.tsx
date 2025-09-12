@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import advisorImg from "@/assets/advisors/shekharimg.jpg";
@@ -137,39 +137,52 @@ const BoardOfAdvisor = () => {
 
         {/* Advisor Cards */}
         <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10">
-          {advisors.map((advisor, index) => (
-            <motion.div
-              key={index}
-              initial="hidden"
-              animate="show"
-              variants={sectionVariant}
-              whileHover={{ scale: 1.03 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden 
-                         flex flex-col hover:shadow-2xl transition-all duration-300"
-            >
-              {/* Image */}
-              <div className="w-full h-[420px] overflow-hidden flex justify-center">
-                <img
-                  src={advisor.image}
-                  alt={advisor.name}
-                  className="h-full w-auto object-cover transform hover:scale-105 transition duration-700"
-                />
-              </div>
+          {advisors.map((advisor, index) => {
+            const [expanded, setExpanded] = useState(false);
+            const previewLength = 350;
+            const isLong = advisor.description.length > previewLength;
+            const preview = isLong ? advisor.description.slice(0, previewLength) + "..." : advisor.description;
+            return (
+              <motion.div
+                key={index}
+                initial="hidden"
+                animate="show"
+                variants={sectionVariant}
+                whileHover={{ scale: 1.03 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300"
+              >
+                {/* Image */}
+                <div className="w-full h-[340px] md:h-[420px] overflow-hidden flex justify-center items-center bg-gray-100 dark:bg-gray-900">
+                  <img
+                    src={advisor.image}
+                    alt={advisor.name}
+                    className="h-full w-auto object-cover transform hover:scale-105 transition duration-700 rounded-lg shadow"
+                  />
+                </div>
 
-              {/* Text */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h2 className="text-2xl font-bold text-news-dark dark:text-white mb-2">
-                  {advisor.name}
-                </h2>
-                <p className="text-md font-semibold text-news-primary dark:text-gray-400 mb-4 leading-snug">
-                  {advisor.title}
-                </p>
-                <p className="text-gray-700 dark:text-gray-300 text-justify leading-relaxed">
-                  {advisor.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                {/* Text */}
+                <div className="p-6 flex flex-col flex-grow">
+                  <h2 className="text-2xl font-bold text-news-dark dark:text-white mb-2">
+                    {advisor.name}
+                  </h2>
+                  <p className="text-md font-semibold text-news-primary dark:text-gray-400 mb-4 leading-snug">
+                    {advisor.title}
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 text-justify leading-relaxed">
+                    {expanded || !isLong ? advisor.description : preview}
+                  </p>
+                  {isLong && (
+                    <button
+                      className="mt-3 self-start text-blue-600 dark:text-blue-400 hover:underline font-medium text-sm"
+                      onClick={() => setExpanded((prev) => !prev)}
+                    >
+                      {expanded ? "Read Less" : "Read More"}
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </>

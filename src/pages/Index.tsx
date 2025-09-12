@@ -56,7 +56,13 @@ const IndexPage = () => {
     return () => controller.abort();
   }, []);
 
-  const handleExploreClick = () => navigate("/emerging");
+  // Ref for articles section
+  const articlesRef = useRef<HTMLDivElement | null>(null);
+  const handleExploreClick = () => {
+    if (articlesRef.current) {
+      articlesRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
   // Ref for filtered articles section
   const filteredRef = useRef<HTMLDivElement | null>(null);
   const handleTagClick = (tag: string) => {
@@ -102,43 +108,41 @@ const IndexPage = () => {
       )}
 
       {/* Hero Section (hidden when tag is selected) */}
+
       {!selectedTag && (
         <>
           <motion.section
             style={{ opacity: heroOpacity }}
-            className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-12"
+            className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-12"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-7xl w-full">
-              <motion.div
+            <div className="flex flex-col items-center max-w-3xl w-full mx-auto text-center">
+              <motion.h1
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.8 }}
-                className="flex flex-col justify-center max-w-lg"
+                className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg"
               >
-                <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg">
-                  Tracking Tomorrow's Battles Today
-                </h1>
-                <p className="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-sm">
-                  Get the latest news and reports from across the globe — all in one place.
-                </p>
-                <motion.button
-                  onClick={handleExploreClick}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300"
-                >
-                  Explore Insights
-                </motion.button>
-              </motion.div>
-
+                Tracking Tomorrow's Battles Today
+              </motion.h1>
+              <p className="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-sm">
+                Get the latest news and reports from across the globe — all in one place.
+              </p>
+              <motion.button
+                onClick={handleExploreClick}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 mb-8"
+              >
+                Explore Insights
+              </motion.button>
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.8 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-lg"
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-lg w-full"
               >
                 <h2 className="text-2xl font-semibold mb-4">Popular Tags</h2>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 justify-center">
                   {uniqueTags.length === 0 ? (
                     <span className="text-gray-300">No tags found</span>
                   ) : (
@@ -165,7 +169,7 @@ const IndexPage = () => {
             Latest Insights & Reports
           </motion.div>
 
-          <main className="container mx-auto px-6 md:px-12 mb-20">
+          <main ref={articlesRef} className="container mx-auto px-6 md:px-12 mb-20">
             {loading ? (
               <p className="text-center text-gray-400">Loading articles...</p>
             ) : articles.length === 0 ? (
