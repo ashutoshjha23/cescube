@@ -71,8 +71,21 @@ const ArticlePage: React.FC = () => {
     return `https://cnaws.in/api/uploads/authors/${author.image_url}`;
   };
 
+  // Add custom CSS for Quill headers
+  const quillHeaderStyle = `
+    <style>
+      .ql-editor h1, .quill-content h1 { font-size: 2.25rem; font-weight: bold; }
+      .ql-editor h2, .quill-content h2 { font-size: 1.75rem; font-weight: bold; }
+      .ql-editor h3, .quill-content h3 { font-size: 1.5rem; font-weight: bold; }
+      .ql-editor h4, .quill-content h4 { font-size: 1.25rem; font-weight: bold; }
+      .ql-editor h5, .quill-content h5 { font-size: 1rem; font-weight: bold; }
+      .ql-editor h6, .quill-content h6 { font-size: 0.875rem; font-weight: bold; }
+    </style>
+  `;
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      <div dangerouslySetInnerHTML={{ __html: quillHeaderStyle }} />
       <button
         onClick={() => navigate(-1)}
         className="mb-8 text-blue-600 hover:text-blue-800 hover:underline font-medium"

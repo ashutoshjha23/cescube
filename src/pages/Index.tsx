@@ -29,7 +29,17 @@ const IndexPage = () => {
 
   // Dynamic tags from articles (must be after articles state)
   const allTags = articles.flatMap(a => a.tags || []);
-  const uniqueTags = Array.from(new Set(allTags));
+  // Count tag frequency
+  const tagCounts: Record<string, number> = {};
+  allTags.forEach(tag => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+  // Sort tags by frequency, descending
+  const sortedTags = Object.entries(tagCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([tag]) => tag);
+  // Show only top 8 tags
+  const limitedTags: string[] = sortedTags.slice(0, 8);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   useEffect(() => {
@@ -143,10 +153,10 @@ const IndexPage = () => {
               >
                 <h2 className="text-2xl font-semibold mb-4">Popular Tags</h2>
                 <div className="flex flex-wrap gap-3 justify-center">
-                  {uniqueTags.length === 0 ? (
+                  {limitedTags.length === 0 ? (
                     <span className="text-gray-300">No tags found</span>
                   ) : (
-                    uniqueTags.map((tag, idx) => (
+                    limitedTags.map((tag, idx) => (
                       <motion.span
                         key={idx}
                         onClick={() => handleTagClick(tag)}

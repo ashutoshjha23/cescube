@@ -1,37 +1,46 @@
-import { useEffect } from "react";
-import { Helmet } from "react-helmet";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
-const sectionVariant = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+const containerStyle = {
+  width: "100%",
+  height: "600px"
+};
+
+const center = {
+  lat: 28.6139, // default latitude
+  lng: 77.2090  // default longitude
 };
 
 const MapPage = () => {
+  const [markers, setMarkers] = useState([]);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY" // 🔑 replace with your API key
+  });
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    fetch("http://localhost/your_backend/get_markers.php") // your PHP endpoint
+      .then(res => res.json())
+      .then(data => setMarkers(data))
+      .catch(err => console.error(err));
   }, []);
 
+  if (!isLoaded) return <div>Loading Map...</div>;
+
   return (
-    <>
-
-
-      <div className="min-h-screen flex items-center justify-center bg-news-light dark:bg-gray-900 px-4 py-12">
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={sectionVariant}
-          className="text-center"
-        >
-          <h1 className="text-4xl font-bold mb-4 text-news-dark dark:text-white">
-            Conflict Map
-          </h1>
-          <p className="text-lg text-news-primary dark:text-gray-300">
-            Coming Soon...
-          </p>
-        </motion.div>
-      </div>
-    </>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={10}
+    >
+      {markers.map((marker: any, index: number) => (
+        <Marker
+          key={index}
+          position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
+          title={marker.title}
+        />
+      ))}
+    </GoogleMap>
   );
 };
 

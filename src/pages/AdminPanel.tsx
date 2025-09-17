@@ -11,7 +11,7 @@ import "react-quill/dist/quill.core.css";
 // Enhanced ReactQuill with custom toolbar and modules
 const quillModules = {
   toolbar: [
-    [{ 'font': [] }, { 'size': [] }],
+    [{ 'size': ['12px', '14px', '16px', '18px', '24px', '32px', '48px'] }],
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
     ['bold', 'italic', 'underline', 'strike'],
     [{ 'color': [] }, { 'background': [] }],
@@ -477,73 +477,74 @@ setSuccessMessage("");
             {loading ? (
               <p>Loading articles...</p>
             ) : (
-              <table className="w-full text-left border-collapse shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="p-3 border-b">ID</th>
-                    <th className="p-3 border-b">Title</th>
-                    <th className="p-3 border-b">Author</th>
-                    <th className="p-3 border-b">Tags</th>
-                    <th className="p-3 border-b">Image</th>
-                    <th className="p-3 border-b">Created At</th>
-                    <th className="p-3 border-b">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {articles.map((a) => (
-                    <tr key={a.id} className="hover:bg-gray-50">
-                      <td className="p-3 border-b">{a.id}</td>
-                      <td className="p-3 border-b">{a.title}</td>
-                      <td className="p-3 border-b">
-  {a.author_details ? (
-    <span className="font-semibold">{a.author_details.name}</span>
-  ) : (
-    <span>—</span>
-  )}
-</td>
-
-                      <td className="p-3 border-b">
-                        {a.tags?.length
-                          ? a.tags.map((t) => (
-                              <span
-                                key={t}
-                                className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1"
-                              >
-                                {t}
-                              </span>
-                            ))
-                          : "—"}
-                      </td>
-                      <td className="p-3 border-b">
-                        {a.image_url && (
-                          <img
-                            src={`${API_BASE}/${a.image_url}`}
-                            alt={a.title}
-                            className="h-12 w-20 object-cover rounded"
-                          />
-                        )}
-                      </td>
-                      <td className="p-3 border-b">
-                        {new Date(a.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="p-3 border-b flex gap-2">
-                        <button
-                          onClick={() => handleEdit(a)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(a.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <table className="w-full text-left border-collapse rounded-lg overflow-hidden shadow">
+  <thead className="bg-gray-100">
+    <tr>
+      <th className="p-2 border-b text-sm font-semibold">ID</th>
+      <th className="p-2 border-b text-sm font-semibold">Title</th>
+      <th className="p-2 border-b text-sm font-semibold">Author</th>
+      <th className="p-2 border-b text-sm font-semibold">Tags</th>
+      <th className="p-2 border-b text-sm font-semibold">Image</th>
+      <th className="p-2 border-b text-sm font-semibold">Created At</th>
+      <th className="p-2 border-b text-sm font-semibold text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {articles.map((a) => (
+      <tr key={a.id} className="hover:bg-gray-50">
+        <td className="p-2 border-b align-middle">{a.id}</td>
+        <td className="p-2 border-b align-middle">{a.title}</td>
+        <td className="p-2 border-b align-middle">
+          {a.author_details ? (
+            <span className="font-semibold">{a.author_details.name}</span>
+          ) : (
+            <span>—</span>
+          )}
+        </td>
+        <td className="p-2 border-b align-middle">
+          {a.tags?.length
+            ? a.tags.map((t, idx) => (
+                <span
+                  key={idx}
+                  className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1"
+                >
+                  {t}
+                </span>
+              ))
+            : "—"}
+        </td>
+        <td className="p-2 border-b align-middle">
+          {a.image_url && (
+            <img
+              src={`${API_BASE}/${a.image_url}`}
+              alt={a.title}
+              className="h-10 w-16 object-cover rounded"
+            />
+          )}
+        </td>
+        <td className="p-2 border-b align-middle">
+          {new Date(a.created_at).toLocaleDateString()}
+        </td>
+        <td className="p-2 border-b align-middle text-center">
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => handleEdit(a)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(a.id)}
+              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs"
+            >
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
             )}
           </div>
         )}
@@ -560,7 +561,12 @@ setSuccessMessage("");
             <h2 className="text-2xl font-bold mb-4">
               {view === "add" ? "Add New Article" : "Edit Article"}
             </h2>
-
+            <button
+              onClick={handleAddOrEdit}
+              className="mb-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+            >
+              {view === "add" ? "Add Article" : "Update Article"}
+            </button>
             <input
               type="text"
               placeholder="Title"
@@ -680,13 +686,6 @@ setSuccessMessage("");
               onChange={setContent}
               className="mb-4 quill-content"
             />
-
-            <button
-              onClick={handleAddOrEdit}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-            >
-              {view === "add" ? "Add Article" : "Update Article"}
-            </button>
           </div>
         )}
 
@@ -883,9 +882,21 @@ const hideFooterStyle = `
   </style>
 `;
 
+// Add custom CSS for Quill headers
+const quillHeaderStyle = `
+  <style>
+    .ql-editor h1 { font-size: 2.25rem; font-weight: bold; }
+    .ql-editor h2 { font-size: 1.75rem; font-weight: bold; }
+    .ql-editor h3 { font-size: 1.5rem; font-weight: bold; }
+    .ql-editor h4 { font-size: 1.25rem; font-weight: bold; }
+    .ql-editor h5 { font-size: 1rem; font-weight: bold; }
+    .ql-editor h6 { font-size: 0.875rem; font-weight: bold; }
+  </style>
+`;
+
 const AdminPanelWithFooterHide = () => (
   <>
-    <div dangerouslySetInnerHTML={{ __html: hideFooterStyle }} />
+    <div dangerouslySetInnerHTML={{ __html: hideFooterStyle + quillHeaderStyle }} />
     <AdminPanel />
   </>
 );
