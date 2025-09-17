@@ -20,6 +20,7 @@ import sulekimg from "@/assets/advisors/sulekimg.jpg";
 import laurenimg from "@/assets/advisors/laurenimg.jpg";
 import elizabethimg from "@/assets/advisors/elizabethimg.jpg";
 import himanshuimg from "@/assets/advisors/himanshuimg.jpg";
+import manojimg from "@/assets/advisors/manojimg.jpg";
 
 // Research Domain - Academic research, policy analysis, and scholarly work
 const researchTeam = [
@@ -90,6 +91,17 @@ His areas of expertise span Geo-politics, Defence, Finance, International Trade,
     role: "Research Fellow",
     bio: `Dr. Lauren Dagan Amoss is a researcher specializing in India's foreign and security policy, with a regional focus on the Indo-Pacific. She is a fellow at the Begin-Sadat Center for Strategic Studies (BESA) and a lecturer at Bar-Ilan University. Dr. Dagan Amos is a member of the Deborah Forum, which promotes women in Israel's foreign and defense policy community.`,
     image: laurenimg,
+  },
+    {
+    name: "Wg Cdr (Dr.) Manoj Kumar (Retd.)",
+    role: "Research Fellow",
+    bio: `Wg Cdr (Dr.) Manoj Kumar (Retd.) is a distinguished Indian Air Force veteran, a product leader, and a leading authority in AI and autonomous systems. His career is a testament to his unwavering commitment to advancing India's indigenous defence capabilities and strategic autonomy.
+As a renowned thought leader and frequent speaker, Dr. Kumar is a well-known voice in the drone ecosystem and is at the forefront of policy discussions on drone technology and the dual-use applications of unmanned aerial systems. He is a key advocate for the 'Atmanirbhar Bharat' initiative, fostering collaboration between government, industry, and academia to accelerate innovation.
+With more than 15 years in defence innovation, Dr. Kumar has a proven track record of delivering high-impact projects. He spearheaded the transformative Mehar Baba Swarm Drone initiative, securing substantial funding and driving the development of over a dozen indigenous UAV technologies. He also played a critical role in the multi-national induction of platforms like the AH-64 Apache, C-17 Transport Aircraft, SPYDER-MR, and the Heron Mk II UAV fleet, along with small arms like the IWI Negev LMG and Tavor X95. His work is recognised for its tangible results, including contributions to mission-critical platforms used in high-stakes operations like Balakot and Galwan. He holds several patents in AI and machine learning, a testament to his technical expertise and innovative mindset.
+Dr. Kumar's leadership extends beyond the military, as he has successfully built an extensive ecosystem with over 129 startups and industries to accelerate technology adoption. He is an
+alumnus of the Indian Air Force Academy, the Weapon School, and BITS Pilani, where he earned his Ph.D. in Technology Integration. He holds a PMP certification from PMI and a Certificate in Generative AI and Prompt Engineering from CDAC. He is also an explosive and Hazardous material-trained officer from the USAF and a DGCA-certified drone pilot.
+In addition to his professional achievements, Dr. Kumar is an accomplished endurance athlete, including being an Ironman triathlete and a PADI-certified scuba diver. His remarkable feat of swimming 2,600 km of the Ganga River underscores the resilience and discipline that define his approach to leadership and innovation.`,
+    image: manojimg,
   },
 ];
 
