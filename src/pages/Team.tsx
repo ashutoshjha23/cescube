@@ -34,7 +34,7 @@ His research interests focus on India's neighbourhood, which he approaches throu
   },
   {
     name: "Divya Malhotra",
-    role: "Research Fellow",
+    role: "Senior Research Fellow",
     bio: `Divya holds a PhD in Geopolitics from the School of International Studies, Jawaharlal Nehru University (JNU), New Delhi. She is presently a Research Fellow with the Centre for National Security Studies, Bangalore, and the Middle East Institute, New Delhi. 
 
 She completed her MPhil from JNU, MA in Applied Economics from Christ University, Bengaluru, and BA (Hons.) in Economics from Panjab University, Chandigarh. Previously, she has worked with the National Security Council's Advisory Board (NSAB) and MP-IDSA, Delhi, as a researcher. She was also associated with Rashtriya Raksha University (Ministry of Home Affairs), Gujarat, as Assistant Professor and Assistant Director. 
@@ -88,13 +88,13 @@ His areas of expertise span Geo-politics, Defence, Finance, International Trade,
   },
   {
     name: "Dr. Lauren Dagan Amoss",
-    role: "Research Fellow",
+    role: "Senior Research Fellow",
     bio: `Dr. Lauren Dagan Amoss is a researcher specializing in India's foreign and security policy, with a regional focus on the Indo-Pacific. She is a fellow at the Begin-Sadat Center for Strategic Studies (BESA) and a lecturer at Bar-Ilan University. Dr. Dagan Amos is a member of the Deborah Forum, which promotes women in Israel's foreign and defense policy community.`,
     image: laurenimg,
   },
     {
     name: "Wg Cdr (Dr.) Manoj Kumar (Retd.)",
-    role: "Research Fellow",
+    role: "Senior Research Fellow",
     bio: `Wg Cdr (Dr.) Manoj Kumar (Retd.) is a distinguished Indian Air Force veteran, a product leader, and a leading authority in AI and autonomous systems. His career is a testament to his unwavering commitment to advancing India's indigenous defence capabilities and strategic autonomy.
 As a renowned thought leader and frequent speaker, Dr. Kumar is a well-known voice in the drone ecosystem and is at the forefront of policy discussions on drone technology and the dual-use applications of unmanned aerial systems. He is a key advocate for the 'Atmanirbhar Bharat' initiative, fostering collaboration between government, industry, and academia to accelerate innovation.
 With more than 15 years in defence innovation, Dr. Kumar has a proven track record of delivering high-impact projects. He spearheaded the transformative Mehar Baba Swarm Drone initiative, securing substantial funding and driving the development of over a dozen indigenous UAV technologies. He also played a critical role in the multi-national induction of platforms like the AH-64 Apache, C-17 Transport Aircraft, SPYDER-MR, and the Heron Mk II UAV fleet, along with small arms like the IWI Negev LMG and Tavor X95. His work is recognised for its tangible results, including contributions to mission-critical platforms used in high-stakes operations like Balakot and Galwan. He holds several patents in AI and machine learning, a testament to his technical expertise and innovative mindset.

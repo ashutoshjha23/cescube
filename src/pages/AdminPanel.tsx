@@ -2,27 +2,26 @@ import { useState, useEffect, forwardRef } from "react";
 import { useAuth } from "@/App";
 import ReactQuillOriginal from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import "react-quill/dist/quill.bubble.css";
-import "react-quill/dist/quill.core.css";
-import "react-quill/dist/quill.snow.css";
-import "react-quill/dist/quill.bubble.css";
-import "react-quill/dist/quill.core.css";
+
 
 // Enhanced ReactQuill with custom toolbar and modules
 const quillModules = {
   toolbar: [
-    [{ 'size': ['12px', '14px', '16px', '18px', '24px', '32px', '48px'] }],
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'color': [] }, { 'background': [] }],
-    [{ 'script': 'sub'}, { 'script': 'super' }],
-    ['blockquote', 'code-block'],
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    [{ 'indent': '-1'}, { 'indent': '+1' }],
-    [{ 'align': [] }],
-    ['link', 'image', 'video'],
-    ['clean']
-  ]
+    // Use only one of these:
+    [{ header: [1, 2, 3, 4, 5, 6, false] }], // headings + "Normal"
+    // OR
+    // [{ size: ["small", "large", "huge", false] }], // font sizes + "Normal"
+
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    ["blockquote", "code-block"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ align: [] }],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
 };
 
 const quillFormats = [
@@ -34,14 +33,23 @@ const quillFormats = [
   'align', 'link', 'image', 'video'
 ];
 
-const ReactQuill = forwardRef<any, any>((props, ref) => (
-  <ReactQuillOriginal
-    {...props}
-    ref={ref}
-    modules={quillModules}
-    formats={quillFormats}
-  />
-));
+// ✅ Fix: forwardRef must handle refs correctly
+// Correct typing: ref points to ReactQuillOriginal instance
+const ReactQuill = forwardRef<any, React.ComponentProps<typeof ReactQuillOriginal>>(
+  (props, ref) => (
+    <ReactQuillOriginal
+      {...props}
+      ref={ref}
+      modules={quillModules}
+      formats={quillFormats}
+      theme="snow"
+    />
+  )
+);
+ReactQuill.displayName = "ReactQuill"; // avoid anonymous component warnings
+
+
+
 
 interface Article {
   id: number;
