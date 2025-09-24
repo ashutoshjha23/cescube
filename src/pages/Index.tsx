@@ -88,7 +88,7 @@ const IndexPage = () => {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      {/* Filtered Articles Section (above hero) */}
+      {/* Filtered Articles Section  */}
       {selectedTag && (
         <main ref={filteredRef} className="container mx-auto px-6 md:px-12 mt-10 mb-10">
           <div className="flex items-center justify-between mb-6">
