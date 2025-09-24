@@ -883,28 +883,32 @@ setSuccessMessage("");
 );
 };
 
-// Hide global footer when admin panel is rendered
-const hideFooterStyle = `
+// Add custom CSS for Quill headers
+
+const quillHeaderStyle = `
   <style>
-    footer, .footer, #footer { display: none !important; }
+    .ql-editor h1 { font-size: 2.25rem; font-weight: bold; margin: 1rem 0; }
+    .ql-editor h2 { font-size: 1.75rem; font-weight: bold; margin: 0.75rem 0; }
+    .ql-editor h3 { font-size: 1.5rem; font-weight: bold; margin: 0.5rem 0; }
+    .ql-editor h4 { font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0; }
+    .ql-editor h5 { font-size: 1rem; font-weight: 600; margin: 0.25rem 0; }
+    .ql-editor h6 { font-size: 0.875rem; font-weight: 600; margin: 0.25rem 0; }
   </style>
 `;
 
-// Add custom CSS for Quill headers
-const quillHeaderStyle = `
+
+// Hide the default Quill footer (powered by Quill message)
+const hideFooterStyle = `
   <style>
-    .ql-editor h1 { font-size: 2.25rem; font-weight: bold; }
-    .ql-editor h2 { font-size: 1.75rem; font-weight: bold; }
-    .ql-editor h3 { font-size: 1.5rem; font-weight: bold; }
-    .ql-editor h4 { font-size: 1.25rem; font-weight: bold; }
-    .ql-editor h5 { font-size: 1rem; font-weight: bold; }
-    .ql-editor h6 { font-size: 0.875rem; font-weight: bold; }
+    .ql-container .ql-tooltip.ql-hidden { display: none !important; }
+    .ql-toolbar.ql-snow + .ql-container.ql-snow::after { display: none !important; }
   </style>
 `;
+
 
 const AdminPanelWithFooterHide = () => (
   <>
-    <div dangerouslySetInnerHTML={{ __html: hideFooterStyle + quillHeaderStyle }} />
+    <div dangerouslySetInnerHTML={{ __html: quillHeaderStyle + hideFooterStyle }} />
     <AdminPanel />
   </>
 );

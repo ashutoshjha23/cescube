@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import NewsCard from "@/components/NewsCard";
+import "@/styles/quill.css";
+
 
 interface Article {
   id: number;
@@ -71,21 +73,10 @@ const ArticlePage: React.FC = () => {
     return `https://cnaws.in/api/uploads/authors/${author.image_url}`;
   };
 
-  // Add custom CSS for Quill headers
-  const quillHeaderStyle = `
-    <style>
-      .ql-editor h1, .quill-content h1 { font-size: 2.25rem; font-weight: bold; }
-      .ql-editor h2, .quill-content h2 { font-size: 1.75rem; font-weight: bold; }
-      .ql-editor h3, .quill-content h3 { font-size: 1.5rem; font-weight: bold; }
-      .ql-editor h4, .quill-content h4 { font-size: 1.25rem; font-weight: bold; }
-      .ql-editor h5, .quill-content h5 { font-size: 1rem; font-weight: bold; }
-      .ql-editor h6, .quill-content h6 { font-size: 0.875rem; font-weight: bold; }
-    </style>
-  `;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <div dangerouslySetInnerHTML={{ __html: quillHeaderStyle }} />
+
       <button
         onClick={() => navigate(-1)}
         className="mb-8 text-blue-600 hover:text-blue-800 hover:underline font-medium"
@@ -130,21 +121,26 @@ const ArticlePage: React.FC = () => {
         {article.created_at && <span>{new Date(article.created_at).toLocaleDateString()}</span>}
       </motion.div>
 
-      {/* Content */}
-      <motion.div className="prose max-w-full text-gray-800 dark:text-gray-100 quill-content">
-        {article.content ? (
-          <div
-            className="dark-prose"
-            dangerouslySetInnerHTML={{
-              __html: article.content
-                ?.replace(/<img /g, '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" ')
-                ?.replace(/<a /g, '<a class="text-blue-600 dark:text-blue-400 hover:underline" '),
-            }}
-          />
-        ) : (
-          <p>No content available for this article.</p>
-        )}
-      </motion.div>
+<motion.div className="max-w-full text-gray-800 dark:text-gray-100 quill-content prose dark:prose-invert">
+  {article.content ? (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: article.content
+          ?.replace(
+            /<img /g,
+            '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" '
+          )
+          ?.replace(
+            /<a /g,
+            '<a class="text-blue-600 dark:text-blue-400 hover:underline" '
+          ),
+      }}
+    />
+  ) : (
+    <p>No content available for this article.</p>
+  )}
+</motion.div>
+
 
       {/* Tags */}
       {article.tags && article.tags.length > 0 && (
