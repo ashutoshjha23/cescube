@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import NewsCard from "@/components/NewsCard";
 import "@/styles/quill.css";
 
-
 interface Article {
   id: number;
   title: string;
@@ -22,14 +21,33 @@ interface Article {
   tags?: string[];
 }
 
-// Fetch all articles
+// -----------------------------
+// API CALLS
+// -----------------------------
+const fetchArticleById = async (id: string) => {
+  const res = await fetch(`https://cnaws.in/api/article_detail.php?id=${id}`, {
+    credentials: "include",
+    cache: "force-cache",
+  });
+  if (!res.ok) throw new Error(`Failed to fetch article: ${res.status}`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message || "Article not found");
+  return json.article as Article;
+};
+
 const fetchArticles = async () => {
-  const res = await fetch(`https://cnaws.in/api/articles_get.php`);
+  const res = await fetch(`https://cnaws.in/api/articles_get.php?limit=30`, {
+    credentials: "include",
+    cache: "force-cache",
+  });
   if (!res.ok) throw new Error(`Failed to fetch articles: ${res.status}`);
   const json = await res.json();
   return json.articles as Article[];
 };
 
+// -----------------------------
+// COMPONENT
+// -----------------------------
 const ArticlePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -37,46 +55,57 @@ const ArticlePage: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, []);
+  }, [id]);
 
-  const { data: articles, isLoading, error } = useQuery({
-    queryKey: ["articles"],
+  const {
+    data: article,
+    isLoading: articleLoading,
+    error: articleError,
+  } = useQuery<Article>({
+    queryKey: ["article", id],
+    queryFn: () => fetchArticleById(id!),
+    enabled: !!id,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30,
+    retry: 1,
+  });
+
+  const { data: allArticles } = useQuery<Article[]>({
+    queryKey: ["articles-lite"],
     queryFn: fetchArticles,
     staleTime: 1000 * 60 * 5,
+    enabled: !!article,
   });
 
   if (!id) return <p className="text-center mt-10 text-red-500">Invalid article ID</p>;
-  if (isLoading) return <p className="text-center mt-10 text-gray-500">Loading article...</p>;
-  if (error || !articles) return <p className="text-center mt-10 text-red-500">Error loading article.</p>;
+  if (articleLoading) return <p className="text-center mt-10 text-gray-500">Loading article...</p>;
+  if (articleError || !article) return <p className="text-center mt-10 text-red-500">Error loading article.</p>;
 
-  const article = articles.find((a) => a.id.toString() === id);
-  if (!article) return <p className="text-center mt-10 text-red-500">Article not found.</p>;
+  const relatedArticles =
+    allArticles
+      ?.filter(
+        (a) =>
+          a.id !== article.id &&
+          a.tags &&
+          article.tags &&
+          a.tags.some((tag) => article.tags!.includes(tag))
+      )
+      .slice(0, 3) || [];
 
-  // Related articles: only those with at least one matching tag
-  const relatedArticles = articles
-    .filter((a) => a.id !== article.id && a.tags && article.tags && a.tags.some(tag => article.tags!.includes(tag)))
-    .slice(0, 3);
-
-  // Construct author image URL properly
   const getAuthorImageUrl = (author?: { image_url?: string }) => {
     if (!author?.image_url) return "/default-avatar.png";
-    // If already a full URL
     if (author.image_url.startsWith("http")) return author.image_url;
-    // If already starts with /uploads or uploads, just prefix domain
     if (author.image_url.startsWith("/uploads/")) {
       return `https://cnaws.in/api${author.image_url}`;
     }
     if (author.image_url.startsWith("uploads/")) {
       return `https://cnaws.in/api/${author.image_url}`;
     }
-    // Otherwise, assume it's just the filename
     return `https://cnaws.in/api/uploads/authors/${author.image_url}`;
   };
 
-
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-
       <button
         onClick={() => navigate(-1)}
         className="mb-8 text-blue-600 hover:text-blue-800 hover:underline font-medium"
@@ -90,7 +119,7 @@ const ArticlePage: React.FC = () => {
           className="w-full relative mb-8 rounded-3xl overflow-hidden shadow-lg bg-gray-200 dark:bg-gray-800"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           style={{ paddingTop: "56.25%" }}
         >
           {!imageLoaded && <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse" />}
@@ -115,32 +144,24 @@ const ArticlePage: React.FC = () => {
 
       {/* Author & Date */}
       <motion.div className="flex flex-wrap items-center text-gray-500 dark:text-gray-400 text-sm mb-8 gap-4">
-        {article.author_details?.name && (
-          <span>{article.author_details.name}</span>
-        )}
+        {article.author_details?.name && <span>{article.author_details.name}</span>}
         {article.created_at && <span>{new Date(article.created_at).toLocaleDateString()}</span>}
       </motion.div>
 
-<motion.div className="max-w-full text-gray-800 dark:text-gray-100 quill-content prose dark:prose-invert">
-  {article.content ? (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: article.content
-          ?.replace(
-            /<img /g,
-            '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" '
-          )
-          ?.replace(
-            /<a /g,
-            '<a class="text-blue-600 dark:text-blue-400 hover:underline" '
-          ),
-      }}
-    />
-  ) : (
-    <p>No content available for this article.</p>
-  )}
-</motion.div>
-
+      {/* Content */}
+      <motion.div className="max-w-full text-gray-800 dark:text-gray-100 quill-content prose dark:prose-invert">
+        {article.content ? (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: article.content
+                ?.replace(/<img /g, '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" ')
+                ?.replace(/<a /g, '<a class="text-blue-600 dark:text-blue-400 hover:underline" '),
+            }}
+          />
+        ) : (
+          <p>No content available for this article.</p>
+        )}
+      </motion.div>
 
       {/* Tags */}
       {article.tags && article.tags.length > 0 && (
@@ -148,18 +169,17 @@ const ArticlePage: React.FC = () => {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {article.tags.map((tag, idx) => (
-              <span
+              <button
                 key={idx}
-                className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 rounded-full text-sm"
+                onClick={() => navigate(`/?tag=${encodeURIComponent(tag)}`)}
+                className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 rounded-full text-sm hover:bg-blue-200 dark:hover:bg-blue-700 transition"
               >
                 #{tag}
-              </span>
+              </button>
             ))}
           </div>
         </div>
       )}
-
-
 
       {/* Author Card */}
       {article.author_details && (
@@ -168,14 +188,19 @@ const ArticlePage: React.FC = () => {
             src={getAuthorImageUrl(article.author_details)}
             alt={article.author_details.name}
             className="w-28 h-28 rounded-xl object-cover border-2 border-blue-500 flex-shrink-0"
-            style={{ objectFit: 'cover' }}
             onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
           />
           <div className="flex-1">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-widest mb-1 block">AUTHOR</span>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{article.author_details.name}</h3>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-widest mb-1 block">
+              AUTHOR
+            </span>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+              {article.author_details.name}
+            </h3>
             {article.author_details.description && (
-              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{article.author_details.description}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                {article.author_details.description}
+              </p>
             )}
           </div>
         </div>
@@ -187,7 +212,7 @@ const ArticlePage: React.FC = () => {
           <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Related Articles</h2>
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {relatedArticles.map((ra) => (
-              <NewsCard key={ra.id} {...ra} content={ra.content || ""} />
+              <NewsCard key={ra.id} {...ra} />
             ))}
           </div>
         </div>

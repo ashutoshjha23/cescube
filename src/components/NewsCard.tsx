@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 interface NewsCardProps {
   id: number;
   title: string;
-  content: string;
   image_url?: string;
   author?: string;
   created_at?: string;
@@ -18,7 +17,6 @@ interface NewsCardProps {
 const NewsCard: React.FC<NewsCardProps> = ({
   id,
   title,
-  content,
   image_url,
   author,
   created_at,
@@ -40,7 +38,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
       whileTap={{ scale: 0.98 }}
     >
       {/* Article Image */}
-  <div className="relative w-full h-48 overflow-hidden bg-gray-100 dark:bg-gray-800">
+      <div className="relative w-full h-48 overflow-hidden bg-gray-100 dark:bg-gray-800">
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-gray-300 dark:bg-gray-800 animate-pulse" />
         )}
@@ -63,10 +61,9 @@ const NewsCard: React.FC<NewsCardProps> = ({
       {/* Info */}
       <div className="flex-1 p-4 flex flex-col justify-between">
         <div>
-          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white">{title}</h3>
-          <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
-            {content.replace(/<[^>]+>/g, "").slice(0, 150)}...
-          </p>
+          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white">
+            {title}
+          </h3>
         </div>
 
         {/* Author & Date */}

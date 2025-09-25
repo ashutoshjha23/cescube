@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import NewsCard from "@/components/NewsCard";
 import homepageImage from "@/assets/homepage.png";
@@ -16,86 +16,151 @@ interface Article {
 
 const IndexPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { scrollY } = useScroll();
 
+  // animations
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const cardsOpacity = useTransform(scrollY, [150, 450], [0, 1]);
   const cardsY = useTransform(scrollY, [150, 450], [50, 0]);
   const articlesTitleOpacity = useTransform(scrollY, [300, 500], [0, 1]);
 
-
+  // ----------------------------
+  // STATE
+  // ----------------------------
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  // Dynamic tags from articles (must be after articles state)
+  const limit = 12;
+
+  // ----------------------------
+  // FETCH ARTICLES
+  // ----------------------------
+  const fetchArticles = async (pageNum: number) => {
+    try {
+      if (pageNum === 1) setLoading(true);
+      else setLoadingMore(true);
+
+      const res = await fetch(
+        `https://cnaws.in/api/articles_get.php?page=${pageNum}&limit=${limit}`,
+        { credentials: "include" }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        if (pageNum === 1) {
+          setArticles(data.articles || []);
+        } else {
+          setArticles(prev => [...prev, ...(data.articles || [])]);
+        }
+        setHasMore(data.articles && data.articles.length === limit);
+      } else {
+        console.error("Failed to fetch articles:", data.message);
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error("Error fetching articles:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticles(1);
+  }, []);
+
+  // ----------------------------
+  // TAG HANDLING
+  // ----------------------------
+  const queryParams = new URLSearchParams(location.search);
+  const initialTag = queryParams.get("tag");
+
+  const [selectedTag, setSelectedTag] = useState<string | null>(initialTag);
+
+  useEffect(() => {
+    if (initialTag) {
+      setSelectedTag(initialTag);
+      // auto-scroll to articles when coming from tag link
+      setTimeout(() => {
+        if (articlesRef.current) {
+          articlesRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 300);
+    }
+  }, [initialTag]);
+
+  // ----------------------------
+  // TAGS (from articles)
+  // ----------------------------
   const allTags = articles.flatMap(a => a.tags || []);
-  // Count tag frequency
   const tagCounts: Record<string, number> = {};
   allTags.forEach(tag => {
     tagCounts[tag] = (tagCounts[tag] || 0) + 1;
   });
-  // Sort tags by frequency, descending
   const sortedTags = Object.entries(tagCounts)
     .sort((a, b) => b[1] - a[1])
     .map(([tag]) => tag);
-  // Show only top 8 tags
   const limitedTags: string[] = sortedTags.slice(0, 8);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch(`https://cnaws.in/api/articles_get.php?t=${Date.now()}`, {
-          credentials: "include",
-          signal,
-        });
-        const data = await res.json();
-        if (data.success) setArticles(data.articles || []);
-        else console.error("Failed to fetch articles:", data.message);
-      } catch (err) {
-        console.error("Error fetching articles:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
-    return () => controller.abort();
-  }, []);
-
-  // Ref for articles section
+  // ----------------------------
+  // HANDLERS
+  // ----------------------------
   const articlesRef = useRef<HTMLDivElement | null>(null);
+
   const handleExploreClick = () => {
     if (articlesRef.current) {
       articlesRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
-  // Ref for filtered articles section
-  const filteredRef = useRef<HTMLDivElement | null>(null);
+
   const handleTagClick = (tag: string) => {
     setSelectedTag(tag);
-    // Removed auto-scroll on tag click as requested
+    navigate(`/?tag=${encodeURIComponent(tag)}`);
   };
 
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchArticles(nextPage);
+  };
+
+  // ----------------------------
+  // RENDER
+  // ----------------------------
   return (
     <div className="relative flex flex-col min-h-screen text-white overflow-x-hidden">
-      {/* Fixed Background */}
+      {/* Background */}
       <div className="fixed inset-0 w-full h-full -z-10">
-        <img src={homepageImage} alt="Homepage" className="w-full h-full object-cover" loading="lazy" />
+        <img
+          src={homepageImage}
+          alt="Homepage"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      {/* Filtered Articles Section  */}
+      {/* Filtered Articles Section */}
       {selectedTag && (
-        <main ref={filteredRef} className="container mx-auto px-6 md:px-12 mt-10 mb-10">
+        <main ref={articlesRef} className="container mx-auto px-6 md:px-12 mt-10 mb-10">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">Articles tagged #{selectedTag}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Articles tagged #{selectedTag}
+            </h2>
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow transition"
-              onClick={() => setSelectedTag(null)}
+              onClick={() => {
+                setSelectedTag(null);
+                navigate("/");
+              }}
             >
               &larr; Go Back
             </button>
@@ -104,23 +169,25 @@ const IndexPage = () => {
             <p className="text-center text-gray-400">Loading articles...</p>
           ) : (
             <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {articles.filter(article => (article.tags || []).includes(selectedTag)).map((article) => (
-                <div
-                  key={article.id}
-                  className="shadow-xl rounded-2xl overflow-hidden bg-white text-gray-900 hover:shadow-2xl hover:scale-105 transition-transform duration-300"
-                >
-                  <NewsCard {...article} />
-                </div>
-              ))}
+              {articles
+                .filter(article => (article.tags || []).includes(selectedTag))
+                .map(article => (
+                  <div
+                    key={article.id}
+                    className="shadow-xl rounded-2xl overflow-hidden bg-white text-gray-900 hover:shadow-2xl hover:scale-105 transition-transform duration-300"
+                  >
+                    <NewsCard {...article} />
+                  </div>
+                ))}
             </div>
           )}
         </main>
       )}
 
-      {/* Hero Section (hidden when tag is selected) */}
-
+      {/* Hero + Articles Section */}
       {!selectedTag && (
         <>
+          {/* Hero Section */}
           <motion.section
             style={{ opacity: heroOpacity }}
             className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-12"
@@ -161,7 +228,9 @@ const IndexPage = () => {
                         key={idx}
                         onClick={() => handleTagClick(tag)}
                         whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.25)" }}
-                        className={`px-4 py-2 text-sm rounded-full bg-white/10 backdrop-blur-md cursor-pointer border border-white/20 transition-all duration-300 ${selectedTag === tag ? 'bg-blue-600 text-white' : ''}`}
+                        className={`px-4 py-2 text-sm rounded-full bg-white/10 backdrop-blur-md cursor-pointer border border-white/20 transition-all duration-300 ${
+                          selectedTag === tag ? "bg-blue-600 text-white" : ""
+                        }`}
                       >
                         #{tag}
                       </motion.span>
@@ -172,6 +241,7 @@ const IndexPage = () => {
             </div>
           </motion.section>
 
+          {/* Articles Section */}
           <motion.div
             style={{ opacity: articlesTitleOpacity }}
             className="text-4xl md:text-5xl font-bold text-white text-center mt-12 mb-8"
@@ -185,22 +255,41 @@ const IndexPage = () => {
             ) : articles.length === 0 ? (
               <p className="text-center text-gray-400">No articles available.</p>
             ) : (
-              <motion.div
-                style={{ opacity: cardsOpacity, y: cardsY }}
-                className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              >
-                {articles.map((article, index) => (
-                  <motion.div
-                    key={article.id}
-                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 280, damping: 25, delay: index * 0.05 }}
-                    className="shadow-xl rounded-2xl overflow-hidden bg-white text-gray-900 hover:shadow-2xl hover:scale-105 transition-transform duration-300"
-                  >
-                    <NewsCard {...article} />
-                  </motion.div>
-                ))}
-              </motion.div>
+              <>
+                <motion.div
+                  style={{ opacity: cardsOpacity, y: cardsY }}
+                  className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                >
+                  {articles.map((article, index) => (
+                    <motion.div
+                      key={article.id}
+                      initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 280,
+                        damping: 25,
+                        delay: index * 0.05,
+                      }}
+                      className="shadow-xl rounded-2xl overflow-hidden bg-white text-gray-900 hover:shadow-2xl hover:scale-105 transition-transform duration-300"
+                    >
+                      <NewsCard {...article} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {hasMore && (
+                  <div className="flex justify-center mt-10">
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={loadingMore}
+                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition disabled:opacity-50"
+                    >
+                      {loadingMore ? "Loading..." : "Load More"}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </main>
         </>
