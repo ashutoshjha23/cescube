@@ -1,7 +1,8 @@
-import { useState, useEffect, forwardRef } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import { useAuth } from "@/App";
 import ReactQuillOriginal from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
 
 
 // Enhanced ReactQuill with custom toolbar and modules
@@ -33,21 +34,25 @@ const quillFormats = [
   'align', 'link', 'image', 'video'
 ];
 
-// ✅ Fix: forwardRef must handle refs correctly
-// Correct typing: ref points to ReactQuillOriginal instance
 const ReactQuill = forwardRef<any, React.ComponentProps<typeof ReactQuillOriginal>>(
-  (props, ref) => (
-    <ReactQuillOriginal
-      {...props}
-      ref={ref}
-      modules={quillModules}
-      formats={quillFormats}
-      theme="snow"
-    />
-  )
-);
-ReactQuill.displayName = "ReactQuill"; // avoid anonymous component warnings
+  (props, ref) => {
+    const quillRef = useRef<ReactQuillOriginal>(null);
 
+    // 🟢 Expose quill instance safely without findDOMNode
+    useImperativeHandle(ref, () => quillRef.current as any, []);
+
+    return (
+      <ReactQuillOriginal
+        {...props}
+        ref={quillRef}   // 🟢 local ref instead of passing parent ref directly
+        modules={quillModules}
+        formats={quillFormats}
+        theme="snow"
+      />
+    );
+  }
+);
+ReactQuill.displayName = "ReactQuill";
 
 
 
@@ -102,7 +107,7 @@ const AdminPanel = () => {
 
   // Form states
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<any>(""); // <-- change this one line
   const [author, setAuthor] = useState<number | "">(""); // ✅ default to empty string
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -170,6 +175,57 @@ const AdminPanel = () => {
     }
   };
 
+  // =====================
+  // Tag Management
+  // =====================
+  const handleAddTag = async () => {
+    if (!newTag.trim()) return;
+    try {
+      const formData = new FormData();
+      formData.append("name", newTag);
+
+      const res = await fetch(`${API_BASE}/tags/tags_post.php`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNewTag("");
+        fetchTags(); // refresh tags list
+      } else {
+        alert(data.message || "Failed to add tag");
+      }
+    } catch (err) {
+      console.error("Failed to add tag", err);
+      alert("Failed to add tag");
+    }
+  };
+
+  const handleDeleteTag = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this tag?")) return;
+    try {
+      const formData = new FormData();
+      formData.append("id", id.toString());
+
+      const res = await fetch(`${API_BASE}/tags/tags_delete.php`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchTags();     // refresh tags
+        fetchArticles(); // refresh articles that used this tag
+      } else {
+        alert(data.message || "Failed to delete tag");
+      }
+    } catch (err) {
+      console.error("Failed to delete tag", err);
+      alert("Failed to delete tag");
+    }
+  };
+
   const fetchAuthors = async () => {
     try {
       const res = await fetch(`${API_BASE}/authors/authors_get.php`, { credentials: "include" });
@@ -185,6 +241,7 @@ const AdminPanel = () => {
     fetchTags();
     fetchAuthors();
   }, []);
+
 
   // Reset form when switching to Add view
   useEffect(() => {
@@ -266,72 +323,44 @@ selectedTags.forEach((tagId) => formData.append("tags[]", tagId.toString()));
     }
   };
 
-  // =====================
-  // Edit Article
-  // =====================
-  const handleEdit = (article: Article) => {
-setCurrentArticle(article);
-setTitle(article.title);
-setContent(article.content);
-// Allow blank author if not present
-if (article.author && !isNaN(Number(article.author))) {
-  setAuthor(Number(article.author));
-} else {
-  setAuthor("");
+// Safe helper: decode HTML entities if string, otherwise return empty
+function decodeHTMLEntities(text: string | null | undefined) {
+  if (!text || typeof text !== "string") return "";
+  try {
+    const parser = new DOMParser();
+    const decoded = parser.parseFromString(text, "text/html");
+    return decoded.body.textContent || "";
+  } catch (e) {
+    console.error("Decode error:", e);
+    return text; // fallback to raw
+  }
 }
-setImageFile(null);
-setImagePreview(article.image_url ? `${API_BASE}/${article.image_url}` : null);
-const ids = tags.filter((t) => article.tags.includes(t.name)).map((t) => t.id);
-setSelectedTags(ids);
-setView("edit");
-setError("");
-setSuccessMessage("");
-  };
 
-  // =====================
-  // Tag Management
-  // =====================
-  const handleAddTag = async () => {
-    if (!newTag.trim()) return;
-    try {
-      const formData = new FormData();
-      formData.append("name", newTag);
-      const res = await fetch(`${API_BASE}/tags/tags_post.php`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success) {
-        setNewTag("");
-        fetchTags();
-      } else alert(data.message || "Failed to add tag");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add tag");
-    }
-  };
+const handleEdit = (article: Article) => {
+  setCurrentArticle(article);
+  setTitle(article.title);
 
-  const handleDeleteTag = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this tag?")) return;
-    try {
-      const formData = new FormData();
-      formData.append("id", id.toString());
-      const res = await fetch(`${API_BASE}/tags/tags_delete.php`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchTags();
-        fetchArticles();
-      } else alert(data.message || "Failed to delete tag");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete tag");
-    }
-  };
+  // ✅ Backend already stores raw HTML, so pass it directly
+  setContent(article.content || "");
+
+  // Author
+  if (article.author && !isNaN(Number(article.author))) {
+    setAuthor(Number(article.author));
+  } else {
+    setAuthor("");
+  }
+
+  setImageFile(null);
+  setImagePreview(article.image_url ? `${API_BASE}/${article.image_url}` : null);
+
+  const ids = tags.filter((t) => article.tags.includes(t.name)).map((t) => t.id);
+  setSelectedTags(ids);
+
+  setView("edit");
+  setError("");
+  setSuccessMessage("");
+};
+
 
   // =====================
   // Author Management
@@ -690,10 +719,12 @@ setSuccessMessage("");
             </div>
 
             <ReactQuill
+              key={view + (currentArticle?.id || "new")}
               value={content}
               onChange={setContent}
               className="mb-4 quill-content"
             />
+
           </div>
         )}
 
