@@ -59,7 +59,7 @@ ReactQuill.displayName = "ReactQuill";
 interface Article {
   id: number;
   title: string;
-  content: string;
+  content?: string; // make it optional
   author?: string | number;
   author_details?: {
     id?: number;
@@ -167,7 +167,9 @@ const AdminPanel = () => {
 
   const fetchTags = async () => {
     try {
-      const res = await fetch(`${API_BASE}/tags/tags_get.php`, { credentials: "include" });
+      const res = await fetch(`${API_BASE}/tags/tags_get.php?t=${Date.now()}`, {
+        credentials: "include",
+      });
       const data = await res.json();
       if (data.success) setTags(data.tags);
     } catch (err) {
@@ -178,29 +180,46 @@ const AdminPanel = () => {
   // =====================
   // Tag Management
   // =====================
-  const handleAddTag = async () => {
-    if (!newTag.trim()) return;
-    try {
-      const formData = new FormData();
-      formData.append("name", newTag);
 
-      const res = await fetch(`${API_BASE}/tags/tags_post.php`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success) {
-        setNewTag("");
-        fetchTags(); // refresh tags list
+const handleAddTag = async () => {
+  if (!newTag.trim()) return;
+  try {
+    const formData = new FormData();
+    formData.append("name", newTag);
+
+    const res = await fetch(`${API_BASE}/tags/tags_post.php`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // ✅ If backend returns new tag (best approach)
+      if (data.tag) {
+        setTags((prev) => [...prev, data.tag]);            // Add to tags list
+        setSelectedTags((prev) => [...prev, data.tag.id]); // Auto-select it
       } else {
-        alert(data.message || "Failed to add tag");
+        // ✅ Fallback: re-fetch tags and try to select new one by name
+        await fetchTags();
+        const newTagObj = tags.find(
+          (t) => t.name.toLowerCase() === newTag.toLowerCase()
+        );
+        if (newTagObj && !selectedTags.includes(newTagObj.id)) {
+          setSelectedTags((prev) => [...prev, newTagObj.id]);
+        }
       }
-    } catch (err) {
-      console.error("Failed to add tag", err);
-      alert("Failed to add tag");
+
+      setNewTag("");
+    } else {
+      alert(data.message || "Failed to add tag");
     }
-  };
+  } catch (err) {
+    console.error("Failed to add tag", err);
+    alert("Failed to add tag");
+  }
+};
+
 
   const handleDeleteTag = async (id: number) => {
     if (!confirm("Are you sure you want to delete this tag?")) return;
@@ -215,11 +234,16 @@ const AdminPanel = () => {
       });
       const data = await res.json();
       if (data.success) {
-        fetchTags();     // refresh tags
-        fetchArticles(); // refresh articles that used this tag
-      } else {
-        alert(data.message || "Failed to delete tag");
-      }
+          // Force remove from local state immediately
+          setTags(prev => prev.filter(tag => tag.id !== id));
+
+          // Then refresh from server
+          fetchTags();     
+          fetchArticles(); 
+        } else {
+          alert(data.message || "Failed to delete tag");
+        }
+
     } catch (err) {
       console.error("Failed to delete tag", err);
       alert("Failed to delete tag");
@@ -336,14 +360,29 @@ function decodeHTMLEntities(text: string | null | undefined) {
   }
 }
 
-const handleEdit = (article: Article) => {
+const handleEdit = async (article: Article) => {
   setCurrentArticle(article);
   setTitle(article.title);
 
-  // ✅ Backend already stores raw HTML, so pass it directly
-  setContent(article.content || "");
+  try {
+    const res = await fetch(`${API_BASE}/article_detail.php?id=${article.id}`, {
+      credentials: "include"
+    });
+    const data = await res.json();
+    if (data.success) {
+      setContent(data.article.content || "");
+      const ids = tags.filter((t) => data.article.tags.includes(t.name)).map((t) => t.id);
+      setSelectedTags(ids);
+    } else {
+      setError("Failed to load article content");
+      setContent("");
+    }
+  } catch (err) {
+    console.error("Error fetching article details", err);
+    setError("Error fetching article content");
+    setContent("");
+  }
 
-  // Author
   if (article.author && !isNaN(Number(article.author))) {
     setAuthor(Number(article.author));
   } else {
@@ -352,9 +391,6 @@ const handleEdit = (article: Article) => {
 
   setImageFile(null);
   setImagePreview(article.image_url ? `${API_BASE}/${article.image_url}` : null);
-
-  const ids = tags.filter((t) => article.tags.includes(t.name)).map((t) => t.id);
-  setSelectedTags(ids);
 
   setView("edit");
   setError("");
@@ -434,15 +470,21 @@ const handleEdit = (article: Article) => {
         body: JSON.stringify({ id }),
       });
       const data = await res.json();
+
       if (data.success) {
         setSuccessMessage("Author deleted successfully!");
-        fetchAuthors();
-      } else setError(data.message || "Failed to delete author");
+
+        // ✅ Optimistically remove from local state immediately
+        setAuthors((prev) => prev.filter((a) => a.id !== id));
+      } else {
+        setError(data.message || "Failed to delete author");
+      }
     } catch (err) {
       console.error(err);
       setError("Error deleting author");
     }
   };
+
 
 
   // =====================
@@ -551,14 +593,18 @@ const handleEdit = (article: Article) => {
             : "—"}
         </td>
         <td className="p-2 border-b align-middle">
-          {a.image_url && (
-            <img
-              src={`${API_BASE}/${a.image_url}`}
-              alt={a.title}
-              className="h-10 w-16 object-cover rounded"
-            />
-          )}
+          <img
+            src={a.image_url ? `${API_BASE}/${a.image_url}` : "/default-avatar.png"}
+            alt={a.title}
+            className="h-10 w-16 object-cover rounded"
+            onError={(e) => {
+              if (!e.currentTarget.src.includes("default-avatar.png")) {
+                e.currentTarget.src = "/default-avatar.png";
+              }
+            }}
+          />
         </td>
+
         <td className="p-2 border-b align-middle">
           {new Date(a.created_at).toLocaleDateString()}
         </td>
@@ -878,16 +924,18 @@ const handleEdit = (article: Article) => {
         <td className="p-3 border-b">{a.name}</td>
         <td className="p-3 border-b">{a.description || "—"}</td>
         <td className="p-3 border-b">
-          {a.image_url ? (
-            <img
-              src={`${API_BASE}/${a.image_url}`} // ✅ show image from backend
-              alt={a.name}
-              className="h-12 w-12 object-cover rounded-full border"
-            />
-          ) : (
-            <span className="text-gray-400 text-sm">No Image</span>
-          )}
+          <img
+            src={a.image_url ? `${API_BASE}/${a.image_url}` : "/default-avatar.png"}
+            alt={a.name}
+            className="h-12 w-12 object-cover rounded-full border"
+            onError={(e) => {
+              if (!e.currentTarget.src.includes("default-avatar.png")) {
+                e.currentTarget.src = "/default-avatar.png";
+              }
+            }}
+          />
         </td>
+
         <td className="p-3 border-b flex gap-2">
           <button
             onClick={() => handleEditAuthor(a)}
