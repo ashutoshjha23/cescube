@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Eye } from "lucide-react"; // 👁️ lightweight icon
 
 interface NewsCardProps {
   id: number;
@@ -8,6 +9,7 @@ interface NewsCardProps {
   image_url?: string;
   author?: string;
   created_at?: string;
+  views?: number; // ✅ new field for view count
   author_details?: {
     name: string;
     image_url?: string;
@@ -20,6 +22,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   image_url,
   author,
   created_at,
+  views,
   author_details,
 }) => {
   const navigate = useNavigate();
@@ -66,18 +69,27 @@ const NewsCard: React.FC<NewsCardProps> = ({
           </h3>
         </div>
 
-        {/* Author & Date */}
-        <div className="mt-4 flex justify-between items-center text-gray-500 text-xs">
-          {author_details?.name && (
-            <div className="flex items-center gap-2">
-              <span>{author_details.name}</span>
-            </div>
-          )}
-          {created_at && (
-            <span>{new Date(created_at).toLocaleDateString()}</span>
-          )}
-        </div>
+{/* Author, Date & Views */}
+<div className="mt-4 flex justify-between items-center text-gray-500 text-xs">
+  {/* Author */}
+  <div className="flex items-center gap-2">
+    {author_details?.name && <span>{author_details.name}</span>}
+  </div>
+
+  {/* Date & Views */}
+      <div className="flex items-center gap-4">
+        {created_at && (
+          <span>{new Date(created_at).toLocaleDateString()}</span>
+        )}
+        {typeof views === "number" && (
+          <span className="flex items-center gap-1">
+            <Eye size={14} className="opacity-70" />
+            {views}
+          </span>
+        )}
       </div>
+    </div>
+    </div>
     </motion.div>
   );
 };
