@@ -250,15 +250,19 @@ const handleAddTag = async () => {
     }
   };
 
-  const fetchAuthors = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/authors/authors_get.php`, { credentials: "include" });
-      const data = await res.json();
-      if (data.success) setAuthors(data.authors);
-    } catch (err) {
-      console.error("Failed to fetch authors", err);
-    }
-  };
+    const fetchAuthors = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/authors/authors_get.php`, { 
+          credentials: "include",
+          cache: "no-store"   // 🚀 always fetch fresh data
+        });
+        const data = await res.json();
+        if (data.success) setAuthors(data.authors);
+      } catch (err) {
+        console.error("Failed to fetch authors", err);
+      }
+    };
+
 
   useEffect(() => {
     fetchArticles();
@@ -461,29 +465,31 @@ const handleEdit = async (article: Article) => {
     }
   };
 
-  const handleDeleteAuthor = async (id: number) => {
-    try {
-      const res = await fetch(`${API_BASE}/authors/authors_delete.php`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
-      const data = await res.json();
+    const handleDeleteAuthor = async (id: number) => {
+      try {
+        const res = await fetch(`${API_BASE}/authors/authors_delete.php`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
 
-      if (data.success) {
-        setSuccessMessage("Author deleted successfully!");
+        const data = await res.json();
 
-        // ✅ Optimistically remove from local state immediately
-        setAuthors((prev) => prev.filter((a) => a.id !== id));
-      } else {
-        setError(data.message || "Failed to delete author");
+        if (data.success) {
+          setSuccessMessage("Author deleted successfully!");
+
+          // 🔥 Always re-fetch the fresh authors list
+          await fetchAuthors();
+        } else {
+          setError(data.message || "Failed to delete author");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Error deleting author");
       }
-    } catch (err) {
-      console.error(err);
-      setError("Error deleting author");
-    }
-  };
+    };
+
 
 
 
