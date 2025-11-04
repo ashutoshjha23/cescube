@@ -1,7 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, createContext, useContext, useEffect } from "react";
 
 // Components
@@ -24,6 +24,7 @@ import MapPage from "./pages/MapPage";
 import Gathering from "./pages/Gathering";
 import ArticlePage from "./pages/ArticlePage";
 import NotFound from "./pages/NotFound";
+import MapAdmin from "./pages/MapAdmin";
 
 // Admin
 import AdminPanel from "@/pages/AdminPanel";
@@ -87,9 +88,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 // --- Protected Route ---
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAdmin, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) return <p>Loading...</p>; // show while checking auth
-  return isAdmin ? children : <Navigate to="/admin/login" replace />;
+  return isAdmin
+    ? children
+    : <Navigate to="/admin/login" replace state={{ from: location }} />;
 };
 
 // --- App ---
@@ -118,7 +122,8 @@ const App = () => (
                 <Route path="/disruptive" element={<Disruptive />} />
                 <Route path="/hybrid" element={<Hybrid />} />
                 <Route path="/economic" element={<Economic />} />
-                <Route path="/map" element={<MapPage />} />
+                <Route path="/map" element={<MapPage />}
+                />
 
                 {/* Article Page */}
                 <Route path="/article/:id" element={<ArticlePage />} />
@@ -130,6 +135,14 @@ const App = () => (
                   element={
                     <ProtectedRoute>
                       <AdminPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/map-admin"
+                  element={
+                    <ProtectedRoute>
+                      <MapAdmin />
                     </ProtectedRoute>
                   }
                 />
@@ -145,5 +158,6 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 
 export default App;
