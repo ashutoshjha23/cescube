@@ -9,13 +9,17 @@ interface Conflict {
   date?: string;
 }
 
+const API_BASE = window.location.hostname.includes("localhost")
+  ? "http://localhost:8080/api"
+  : "https://cnaws.in/api";
+
 const MapPage = () => {
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchConflicts = () => {
     setLoading(true);
-    fetch("https://cnaws.in/api/conflicts_get.php", { credentials: "include" })
+    fetch(`${API_BASE}/conflicts_get.php`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setConflicts(data.conflicts || []);

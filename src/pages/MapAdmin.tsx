@@ -10,6 +10,10 @@ interface Conflict {
   date?: string;
 }
 
+const API_BASE = window.location.hostname.includes("localhost")
+  ? "http://localhost:8080/api"
+  : "https://cnaws.in/api";
+
 const MapAdmin = () => {
   const { isAdmin, isLoading } = useAuth();
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
@@ -22,11 +26,12 @@ const MapAdmin = () => {
     date: "",
   });
   const [adding, setAdding] = useState(false);
+  const [deleting, setDeleting] = useState<number | null>(null);
 
   // Fetch conflicts
   const fetchConflicts = () => {
     setLoading(true);
-    fetch("https://cnaws.in/api/conflicts_get.php", { credentials: "include" })
+    fetch(`${API_BASE}/conflicts_get.php`, { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         if (data.success) setConflicts(data.conflicts || []);
@@ -49,7 +54,7 @@ const MapAdmin = () => {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdding(true);
-    const res = await fetch("https://cnaws.in/api/conflicts_add.php", {
+    const res = await fetch(`${API_BASE}/conflicts_add.php`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -63,6 +68,30 @@ const MapAdmin = () => {
       alert(data.message || "Failed to add conflict");
     }
     setAdding(false);
+  };
+
+  // Delete conflict
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this conflict?")) return;
+    setDeleting(id);
+    try {
+      const res = await fetch(`${API_BASE}/conflicts_delete.php`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchConflicts();
+      } else {
+        alert(data.message || "Failed to delete conflict");
+      }
+    } catch (err) {
+      alert("Error deleting conflict");
+    } finally {
+      setDeleting(null);
+    }
   };
 
   if (isLoading) return <div>Checking admin authentication...</div>;
@@ -147,6 +176,7 @@ const MapAdmin = () => {
                 <th className="px-4 py-2 border-b">Date</th>
                 <th className="px-4 py-2 border-b">Latitude</th>
                 <th className="px-4 py-2 border-b">Longitude</th>
+                <th className="px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +187,15 @@ const MapAdmin = () => {
                   <td className="px-4 py-2 border-b">{conflict.date || "-"}</td>
                   <td className="px-4 py-2 border-b">{conflict.lat}</td>
                   <td className="px-4 py-2 border-b">{conflict.lng}</td>
+                  <td className="px-4 py-2 border-b">
+                    <button
+                      onClick={() => handleDelete(conflict.id)}
+                      disabled={deleting === conflict.id}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs disabled:opacity-50"
+                    >
+                      {deleting === conflict.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
