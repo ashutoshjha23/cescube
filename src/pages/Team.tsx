@@ -21,7 +21,7 @@ import laurenimg from "@/assets/advisors/laurenimg.jpg";
 import elizabethimg from "@/assets/advisors/elizabethimg.jpg";
 import himanshuimg from "@/assets/advisors/himanshuimg.jpg";
 import manojimg from "@/assets/advisors/manojimg.jpg";
-
+import ParjanyaImg from "@/assets/advisors/parjanyaimg.jpg";
 // Research Domain - Academic research, policy analysis, and scholarly work
 const researchTeam = [
   {
@@ -102,6 +102,14 @@ Dr. Kumar's leadership extends beyond the military, as he has successfully built
 alumnus of the Indian Air Force Academy, the Weapon School, and BITS Pilani, where he earned his Ph.D. in Technology Integration. He holds a PMP certification from PMI and a Certificate in Generative AI and Prompt Engineering from CDAC. He is also an explosive and Hazardous material-trained officer from the USAF and a DGCA-certified drone pilot.
 In addition to his professional achievements, Dr. Kumar is an accomplished endurance athlete, including being an Ironman triathlete and a PADI-certified scuba diver. His remarkable feat of swimming 2,600 km of the Ganga River underscores the resilience and discipline that define his approach to leadership and innovation.`,
     image: manojimg,
+  },
+    {
+    name: "Major Parjanya Bhatt",
+    role: "Senior Research Fellow",
+    bio: `Major Parjanya Bhatt comes with experience in national security, policy research, and media. With over eight years as a journalist and four years as a policy researcher, he brings a rare blend of practical field exposure, academic rigor, and communication skills to the study of contemporary security challenges.
+As a journalist, Maj Bhatt worked with the DNA and Free Press Journal and worked as a Research Fellow at the Observer Research Foundation (ORF), where his research work focused on the subject of terrorism and information warfare in Jammu & Kashmir, and conceptualised the special project Kashmir Tracker. His insights have been published across leading platforms such as Deccan Herald, Firstpost, Free Press Journal, CENJOWS, and ORF, among others. He has also authored a chapter on Terrorism and Technology.
+An alumnus of the University of Manchester, where he completed his Master’s in International Politics, at CNAWS, Major Bhatt contributes his unique expertise at the intersection of strategy, communication, and counter-terrorism to shape informed, impactful analysis of India’s evolving security landscape.`,
+    image: ParjanyaImg,
   },
 ];
 
