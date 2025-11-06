@@ -2,7 +2,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useState, createContext, useContext, useEffect } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 
 // Components
 import Header from "@/components/Header";
@@ -26,6 +26,9 @@ import ArticlePage from "./pages/ArticlePage";
 import NotFound from "./pages/NotFound";
 import MapAdmin from "./pages/MapAdmin";
 
+// New Conflict Map Pages
+import TerrorismDatabaseJK from "./pages/TerrorismDatabaseJK";
+import TerrorismDatabasePakistan from "./pages/TerrorismDatabasePakistan";
 
 // Admin
 import AdminPanel from "@/pages/AdminPanel";
@@ -37,19 +40,22 @@ const queryClient = new QueryClient();
 interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
-  setIsAdmin: (val: boolean) => void;
+  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
-export const useAuth = () => {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
   return context;
 };
 
 // --- AuthProvider ---
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -87,18 +93,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // --- Protected Route ---
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAdmin, isLoading } = useAuth();
   const location = useLocation();
 
-  if (isLoading) return <p>Loading...</p>; // show while checking auth
-  return isAdmin
-    ? children
-    : <Navigate to="/admin/login" replace state={{ from: location }} />;
+  if (isLoading) return <p>Loading...</p>;
+
+  return isAdmin ? (
+    children
+  ) : (
+    <Navigate to="/admin/login" replace state={{ from: location }} />
+  );
 };
 
 // --- App ---
-const App = () => (
+const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
@@ -123,13 +132,16 @@ const App = () => (
                 <Route path="/disruptive" element={<Disruptive />} />
                 <Route path="/hybrid" element={<Hybrid />} />
                 <Route path="/economic" element={<Economic />} />
-                <Route path="/map" element={<MapPage />}
-                />
 
-                {/* Article Page */}
+                {/* Conflict Map Pages */}
+                <Route path="/terrorism-database-jk" element={<TerrorismDatabaseJK />} />
+                <Route path="/terrorism-database-pakistan" element={<TerrorismDatabasePakistan />} />
+                <Route path="/map" element={<MapPage />} />
+
+                {/* Articles */}
                 <Route path="/article/:id" element={<ArticlePage />} />
 
-                {/* Admin */}
+                {/* Admin Pages */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route
                   path="/admin-panel"
@@ -148,7 +160,7 @@ const App = () => (
                   }
                 />
 
-                {/* Fallback */}
+                {/* 404 Fallback */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
@@ -159,6 +171,5 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
-
 
 export default App;

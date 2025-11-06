@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/App";
+import { Plus, Trash2, RefreshCcw } from "lucide-react";
 
 interface Conflict {
   id: number;
@@ -16,8 +17,12 @@ const API_BASE = window.location.hostname.includes("localhost")
 
 const MapAdmin = () => {
   const { isAdmin, isLoading } = useAuth();
+  const [activeTab, setActiveTab] = useState<"main" | "jk" | "pakistan">("main");
+
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [deleting, setDeleting] = useState<number | null>(null);
   const [form, setForm] = useState({
     title: "",
     lat: "",
@@ -25,182 +30,235 @@ const MapAdmin = () => {
     description: "",
     date: "",
   });
-  const [adding, setAdding] = useState(false);
-  const [deleting, setDeleting] = useState<number | null>(null);
 
-  // Fetch conflicts
-  const fetchConflicts = () => {
+  const endpointMap = {
+    main: {
+      get: `${API_BASE}/conflicts_get.php`,
+      add: `${API_BASE}/conflicts_add.php`,
+      del: `${API_BASE}/conflicts_delete.php`,
+      label: "India & General",
+    },
+    jk: {
+      get: `${API_BASE}/conflicts_jk_get.php`,
+      add: `${API_BASE}/conflicts_jk_add.php`,
+      del: `${API_BASE}/conflicts_jk_delete.php`,
+      label: "Jammu & Kashmir",
+    },
+    pakistan: {
+      get: `${API_BASE}/conflicts_pakistan_get.php`,
+      add: `${API_BASE}/conflicts_pakistan_add.php`,
+      del: `${API_BASE}/conflicts_pakistan_delete.php`,
+      label: "Pakistan",
+    },
+  };
+
+  const fetchData = async () => {
     setLoading(true);
-    fetch(`${API_BASE}/conflicts_get.php`, { credentials: "include" })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setConflicts(data.conflicts || []);
-        else setConflicts([]);
-      })
-      .catch(() => setConflicts([]))
-      .finally(() => setLoading(false));
+    try {
+      const res = await fetch(endpointMap[activeTab].get, { credentials: "include" });
+      const data = await res.json();
+      setConflicts(data.success ? data.conflicts || [] : []);
+    } catch {
+      setConflicts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (isAdmin) fetchConflicts();
-  }, [isAdmin]);
+    if (isAdmin) fetchData();
+  }, [isAdmin, activeTab]);
 
-  // Handle form input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  // Add conflict
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdding(true);
-    const res = await fetch(`${API_BASE}/conflicts_add.php`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setForm({ title: "", lat: "", lng: "", description: "", date: "" });
-      fetchConflicts();
-    } else {
-      alert(data.message || "Failed to add conflict");
-    }
-    setAdding(false);
-  };
-
-  // Delete conflict
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this conflict?")) return;
-    setDeleting(id);
     try {
-      const res = await fetch(`${API_BASE}/conflicts_delete.php`, {
+      const res = await fetch(endpointMap[activeTab].add, {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        credentials: "include",
+        body: JSON.stringify(form),
       });
       const data = await res.json();
       if (data.success) {
-        fetchConflicts();
-      } else {
-        alert(data.message || "Failed to delete conflict");
-      }
-    } catch (err) {
-      alert("Error deleting conflict");
+        setForm({ title: "", lat: "", lng: "", description: "", date: "" });
+        fetchData();
+      } else alert(data.message || "Error adding record");
+    } catch {
+      alert("Error adding record");
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete this record?")) return;
+    setDeleting(id);
+    try {
+      const res = await fetch(endpointMap[activeTab].del, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) fetchData();
+      else alert(data.message || "Delete failed");
+    } catch {
+      alert("Error deleting");
     } finally {
       setDeleting(null);
     }
   };
 
-  if (isLoading) return <div>Checking admin authentication...</div>;
-  if (!isAdmin) return <div>Access denied. Admins only.</div>;
+  if (isLoading) return <div className="p-10 text-center">Checking admin authentication...</div>;
+  if (!isAdmin) return <div className="p-10 text-center">Access denied. Admins only.</div>;
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6">Conflict Map Data (Admin)</h1>
-      <div className="mb-8">
-        <form onSubmit={handleAdd} className="bg-white/10 p-6 rounded-lg mb-6 max-w-xl">
-          <h2 className="text-xl font-semibold mb-4">Add New Conflict</h2>
-          <div className="mb-3">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow p-6">
+        <h1 className="text-2xl font-bold mb-6">Conflict Data Admin Panel</h1>
+
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-3 border-b pb-3 mb-6">
+          {(["main", "jk", "pakistan"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-md font-medium transition ${
+                activeTab === tab
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 hover:bg-gray-200"
+              }`}
+            >
+              {endpointMap[tab].label}
+            </button>
+          ))}
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleAdd}
+          className="bg-gray-50 border rounded-lg p-5 mb-8 space-y-4"
+        >
+          <h2 className="text-lg font-semibold mb-2">
+            Add New Entry — {endpointMap[activeTab].label}
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
-              required
               placeholder="Title"
-              className="w-full px-3 py-2 rounded border"
+              required
+              className="border px-3 py-2 rounded"
             />
-          </div>
-          <div className="mb-3">
+            <input
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              type="date"
+              className="border px-3 py-2 rounded"
+            />
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               placeholder="Description"
-              className="w-full px-3 py-2 rounded border"
+              className="border px-3 py-2 rounded md:col-span-2"
             />
-          </div>
-          <div className="mb-3 flex gap-2">
             <input
               name="lat"
               value={form.lat}
               onChange={handleChange}
-              required
               placeholder="Latitude"
               type="number"
               step="any"
-              className="w-1/2 px-3 py-2 rounded border"
+              className="border px-3 py-2 rounded"
             />
             <input
               name="lng"
               value={form.lng}
               onChange={handleChange}
-              required
               placeholder="Longitude"
               type="number"
               step="any"
-              className="w-1/2 px-3 py-2 rounded border"
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              name="date"
-              value={form.date}
-              onChange={handleChange}
-              placeholder="Date (YYYY-MM-DD)"
-              type="date"
-              className="w-full px-3 py-2 rounded border"
+              className="border px-3 py-2 rounded"
             />
           </div>
           <button
             type="submit"
             disabled={adding}
-            className="bg-blue-600 text-white px-6 py-2 rounded font-semibold"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold flex items-center gap-2"
           >
-            {adding ? "Adding..." : "Add Conflict"}
+            <Plus className="w-4 h-4" />
+            {adding ? "Adding..." : "Add Entry"}
           </button>
         </form>
-        <h2 className="text-2xl font-semibold mb-4">All Conflicts</h2>
-        {loading ? (
-          <div>Loading data...</div>
-        ) : conflicts.length === 0 ? (
-          <div>No conflict data available.</div>
-        ) : (
-          <table className="min-w-full bg-white text-gray-900 rounded-lg shadow">
-            <thead>
+
+        {/* Table */}
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-semibold">All Records</h2>
+          <button
+            onClick={fetchData}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
+          >
+            <RefreshCcw className="w-4 h-4" /> Refresh
+          </button>
+        </div>
+
+        <div className="overflow-x-auto border rounded-lg">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100 text-gray-800">
               <tr>
                 <th className="px-4 py-2 border-b">Title</th>
                 <th className="px-4 py-2 border-b">Description</th>
                 <th className="px-4 py-2 border-b">Date</th>
                 <th className="px-4 py-2 border-b">Latitude</th>
                 <th className="px-4 py-2 border-b">Longitude</th>
-                <th className="px-4 py-2 border-b">Actions</th>
+                <th className="px-4 py-2 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
-              {conflicts.map(conflict => (
-                <tr key={conflict.id}>
-                  <td className="px-4 py-2 border-b">{conflict.title}</td>
-                  <td className="px-4 py-2 border-b">{conflict.description || "-"}</td>
-                  <td className="px-4 py-2 border-b">{conflict.date || "-"}</td>
-                  <td className="px-4 py-2 border-b">{conflict.lat}</td>
-                  <td className="px-4 py-2 border-b">{conflict.lng}</td>
-                  <td className="px-4 py-2 border-b">
-                    <button
-                      onClick={() => handleDelete(conflict.id)}
-                      disabled={deleting === conflict.id}
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs disabled:opacity-50"
-                    >
-                      {deleting === conflict.id ? "Deleting..." : "Delete"}
-                    </button>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-4">
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : conflicts.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-gray-500">
+                    No records found
+                  </td>
+                </tr>
+              ) : (
+                conflicts.map((c) => (
+                  <tr key={c.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2 border-b">{c.title}</td>
+                    <td className="px-4 py-2 border-b">{c.description || "-"}</td>
+                    <td className="px-4 py-2 border-b">{c.date || "-"}</td>
+                    <td className="px-4 py-2 border-b">{c.lat}</td>
+                    <td className="px-4 py-2 border-b">{c.lng}</td>
+                    <td className="px-4 py-2 border-b text-center">
+                      <button
+                        onClick={() => handleDelete(c.id)}
+                        disabled={deleting === c.id}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs flex items-center gap-1 mx-auto disabled:opacity-60"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        {deleting === c.id ? "Deleting..." : "Delete"}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-        )}
+        </div>
       </div>
     </div>
   );

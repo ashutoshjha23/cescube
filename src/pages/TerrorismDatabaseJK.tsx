@@ -13,7 +13,7 @@ const API_BASE = window.location.hostname.includes("localhost")
   ? "http://localhost:8080/api"
   : "https://cnaws.in/api";
 
-const MapPage = () => {
+const TerrorismDatabaseJK = () => {
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [filtered, setFiltered] = useState<Conflict[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ const MapPage = () => {
 
   const [sortConfig, setSortConfig] = useState<{ key: keyof Conflict; direction: "asc" | "desc" } | null>(null);
 
-  // --- Fetch JSON safely ---
+  // --- Safe JSON parsing ---
   const getJSON = async (url: string, init?: RequestInit) => {
     const res = await fetch(url, init);
     const text = await res.text();
@@ -34,10 +34,10 @@ const MapPage = () => {
     }
   };
 
-  // --- Fetch conflicts ---
+  // --- Fetch Data ---
   const fetchConflicts = () => {
     setLoading(true);
-    getJSON(`${API_BASE}/conflicts_get.php`, { credentials: "include" })
+    getJSON(`${API_BASE}/conflicts_jk_get.php`, { credentials: "include" })
       .then((data) => {
         const list = data.success ? data.conflicts || [] : [];
         setConflicts(list);
@@ -51,11 +51,11 @@ const MapPage = () => {
     fetchConflicts();
   }, []);
 
-  // --- Filtering logic ---
+  // --- Filtering + Sorting Logic ---
   useEffect(() => {
     let filteredData = [...conflicts];
 
-    // Keyword search
+    // Search
     if (search.trim()) {
       const term = search.toLowerCase();
       filteredData = filteredData.filter(
@@ -93,7 +93,7 @@ const MapPage = () => {
     setFiltered(filteredData);
   }, [search, dateFilter, conflicts, sortConfig]);
 
-  // --- Sort toggle handler ---
+  // --- Sort handler ---
   const handleSort = (key: keyof Conflict) => {
     setSortConfig((prev) => {
       if (prev && prev.key === key) {
@@ -110,9 +110,11 @@ const MapPage = () => {
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-8">Conflict Data</h1>
+      <h1 className="text-3xl font-bold mb-8">
+        Proposed Terrorism Incident Database Fields (Jammu & Kashmir)
+      </h1>
 
-      {/* Search + Filter Section */}
+      {/* Search + Filters */}
       <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-wrap gap-4 items-center">
         <input
           type="text"
@@ -143,14 +145,12 @@ const MapPage = () => {
         </div>
       </div>
 
-      {/* Table Section */}
+      {/* Table */}
       <div className="bg-white rounded-lg shadow overflow-x-auto">
         {loading ? (
           <div className="p-6 text-center text-gray-500">Loading data...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">
-            No matching conflict data found.
-          </div>
+          <div className="p-6 text-center text-gray-500">No matching incidents found.</div>
         ) : (
           <table className="min-w-full text-gray-900">
             <thead className="bg-gray-100">
@@ -183,13 +183,13 @@ const MapPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((conflict) => (
-                <tr key={conflict.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{conflict.title}</td>
-                  <td className="px-4 py-2 border-b">{conflict.description || "-"}</td>
-                  <td className="px-4 py-2 border-b">{conflict.date || "-"}</td>
-                  <td className="px-4 py-2 border-b">{conflict.lat}</td>
-                  <td className="px-4 py-2 border-b">{conflict.lng}</td>
+              {filtered.map((c) => (
+                <tr key={c.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{c.title}</td>
+                  <td className="px-4 py-2 border-b">{c.description || "-"}</td>
+                  <td className="px-4 py-2 border-b">{c.date || "-"}</td>
+                  <td className="px-4 py-2 border-b">{c.lat}</td>
+                  <td className="px-4 py-2 border-b">{c.lng}</td>
                 </tr>
               ))}
             </tbody>
@@ -200,4 +200,4 @@ const MapPage = () => {
   );
 };
 
-export default MapPage;
+export default TerrorismDatabaseJK;
