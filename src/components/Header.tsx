@@ -18,7 +18,7 @@ const Header = () => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  // Hide/show header on scroll
+  // Hide header on scroll down
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
@@ -62,11 +62,27 @@ const Header = () => {
         { label: "Intelligence Gathering & Analysis", path: "/gathering" },
       ],
     },
+    {
+      title: "Conflict Map",
+      links: [
+        {
+          label: "Proposed Terrorism Incident Database Fields (J&K)",
+          path: "/terrorism-database-jk",
+        },
+        {
+          label: "Proposed Terrorism Incident Database Fields (Pakistan)",
+          path: "/terrorism-database-pakistan",
+        },
+        {
+          label: "Maps",
+          path: "/map",
+        },
+      ],
+    },
   ];
 
   const simpleLinks = [
     { label: "Courses", path: "/courses" },
-    { label: "Conflict Map", path: "/map" },
     { label: "Contact", path: "/contact" },
   ];
 
@@ -98,8 +114,9 @@ const Header = () => {
                 <div className="flex items-center gap-1 text-sm font-medium text-news-dark dark:text-white hover:text-news-primary cursor-pointer transition-colors duration-200">
                   {menu.title} <ChevronDown className="w-4 h-4" />
                 </div>
+
                 {/* Dropdown */}
-                <div className="absolute left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-700 dark:border-gray-800 shadow-xl rounded-md z-50 min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                <div className="absolute left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-700 dark:border-gray-800 shadow-xl rounded-md z-50 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   {menu.links.map((link) => (
                     <Link
                       key={link.path}
@@ -141,7 +158,7 @@ const Header = () => {
             )}
           </button>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Menu Toggle */}
           <button
             className="md:hidden p-2 rounded-md hover:bg-news-primary/20 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -175,6 +192,7 @@ const Header = () => {
                     }`}
                   />
                 </button>
+
                 {openSubMenu === menu.title &&
                   menu.links.map((link) => (
                     <Link
