@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async"; // ✅ added for SEO meta tags
 import NewsCard from "@/components/NewsCard";
 import "@/styles/quill.css";
 
@@ -46,6 +47,15 @@ const fetchArticles = async () => {
 };
 
 // -----------------------------
+// Helper for SEO-friendly URLs
+// -----------------------------
+const slugify = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+// -----------------------------
 // COMPONENT
 // -----------------------------
 const ArticlePage: React.FC = () => {
@@ -77,9 +87,23 @@ const ArticlePage: React.FC = () => {
     enabled: !!article,
   });
 
-  if (!id) return <p className="text-center mt-10 text-red-500">Invalid article ID</p>;
-  if (articleLoading) return <p className="text-center mt-10 text-gray-500">Loading article...</p>;
-  if (articleError || !article) return <p className="text-center mt-10 text-red-500">Error loading article.</p>;
+  // ✅ Update the URL to include the slug (without reloading)
+  useEffect(() => {
+    if (article?.title && id) {
+      const newSlug = slugify(article.title);
+      const newUrl = `/article/${article.id}/${newSlug}`;
+      window.history.replaceState(null, "", newUrl);
+    }
+  }, [article, id]);
+
+  if (!id)
+    return <p className="text-center mt-10 text-red-500">Invalid article ID</p>;
+  if (articleLoading)
+    return <p className="text-center mt-10 text-gray-500">Loading article...</p>;
+  if (articleError || !article)
+    return <p className="text-center mt-10 text-red-500">
+      Error loading article.
+    </p>;
 
   const relatedArticles =
     allArticles
@@ -104,8 +128,32 @@ const ArticlePage: React.FC = () => {
     return `https://cnaws.in/api/uploads/authors/${author.image_url}`;
   };
 
+  // ✅ SEO Meta Values
+  const pageUrl = `https://cnaws.in/article/${article.id}/${slugify(article.title)}`;
+  const imageUrl = article.image_url
+    ? `https://cnaws.in/api/${article.image_url}`
+    : "https://cnaws.in/default-thumbnail.png";
+  const description =
+    article.content?.replace(/<[^>]+>/g, "").slice(0, 150) ||
+    "Read this article on CNAWS.";
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      {/* ✅ META TAGS FOR SOCIAL PREVIEW */}
+      <Helmet>
+        <title>{article.title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={article.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={pageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+      </Helmet>
+
       <button
         onClick={() => navigate(-1)}
         className="mb-8 text-blue-600 hover:text-blue-800 hover:underline font-medium"
@@ -122,9 +170,11 @@ const ArticlePage: React.FC = () => {
           transition={{ duration: 0.6 }}
           style={{ paddingTop: "56.25%" }}
         >
-          {!imageLoaded && <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse" />}
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse" />
+          )}
           <img
-            src={`https://cnaws.in/api/${article.image_url}`}
+            src={imageUrl}
             alt={article.title}
             className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 ${
               imageLoaded ? "opacity-100" : "opacity-0"
@@ -145,7 +195,9 @@ const ArticlePage: React.FC = () => {
       {/* Author & Date */}
       <motion.div className="flex flex-wrap items-center text-gray-500 dark:text-gray-400 text-sm mb-8 gap-4">
         {article.author_details?.name && <span>{article.author_details.name}</span>}
-        {article.created_at && <span>{new Date(article.created_at).toLocaleDateString()}</span>}
+        {article.created_at && (
+          <span>{new Date(article.created_at).toLocaleDateString()}</span>
+        )}
       </motion.div>
 
       {/* Content */}
@@ -154,8 +206,14 @@ const ArticlePage: React.FC = () => {
           <div
             dangerouslySetInnerHTML={{
               __html: article.content
-                ?.replace(/<img /g, '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" ')
-                ?.replace(/<a /g, '<a class="text-blue-600 dark:text-blue-400 hover:underline" '),
+                ?.replace(
+                  /<img /g,
+                  '<img class="mx-auto my-6 rounded-lg max-w-full h-auto" '
+                )
+                ?.replace(
+                  /<a /g,
+                  '<a class="text-blue-600 dark:text-blue-400 hover:underline" '
+                ),
             }}
           />
         ) : (
@@ -166,7 +224,9 @@ const ArticlePage: React.FC = () => {
       {/* Tags */}
       {article.tags && article.tags.length > 0 && (
         <div className="mt-10">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tags:</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            Tags:
+          </h3>
           <div className="flex flex-wrap gap-2">
             {article.tags.map((tag, idx) => (
               <button
@@ -209,7 +269,9 @@ const ArticlePage: React.FC = () => {
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <div className="mt-16">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Related Articles</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+            Related Articles
+          </h2>
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {relatedArticles.map((ra) => (
               <NewsCard key={ra.id} {...ra} />

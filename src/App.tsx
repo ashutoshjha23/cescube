@@ -114,7 +114,13 @@ const App: React.FC = () => (
       <AuthProvider>
         <BrowserRouter>
           <Header />
-          <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <main style={{ flex: 1 }}>
               <Routes>
                 {/* Public Pages */}
@@ -138,8 +144,8 @@ const App: React.FC = () => (
                 <Route path="/terrorism-database-pakistan" element={<TerrorismDatabasePakistan />} />
                 <Route path="/map" element={<MapPage />} />
 
-                {/* Articles */}
-                <Route path="/article/:id" element={<ArticlePage />} />
+                {/* ✅ Updated Article Route with Slug Support */}
+                <Route path="/article/:id/:slug?" element={<ArticlePage />} />
 
                 {/* Admin Pages */}
                 <Route path="/admin/login" element={<AdminLogin />} />

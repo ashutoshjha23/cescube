@@ -5,7 +5,6 @@ import ArpanImg from "@/assets/advisors/Arpanimg.jpg";
 import DivyaImg from "@/assets/advisors/Divyaimg.jpg";
 import AnushkaImg from "@/assets/advisors/anushkaimg.jpg";
 import UmangImg from "@/assets/advisors/umangimg.jpg";
-import AasiaImg from "@/assets/advisors/aasia.jpg";
 import SushantImg from "@/assets/advisors/sushant.jpg";
 import AlakshendraImg from "@/assets/advisors/alakshedraimg.jpg";
 import KhushiImg from "@/assets/advisors/khushiimg.jpg";
@@ -24,15 +23,48 @@ import manojimg from "@/assets/advisors/manojimg.jpg";
 import ParjanyaImg from "@/assets/advisors/parjanyaimg.jpg";
 // Research Domain - Academic research, policy analysis, and scholarly work
 const researchTeam = [
-  {
-    name: "Arpan A. Chakravarty",
-    role: "Visiting Research Fellow",
-    bio: `Arpan A. Chakravarty is a Research Fellow at the India Foundation. Currently, he is a Non-Resident Fellow at the Pune International Centre for National Security Studies and has been a Fellow of the Founding Cohort of the Network for Advanced Studies on Pakistan (NASP) at the Takshashila Institute, Bengaluru.
-
-His research interests focus on India's neighbourhood, which he approaches through his strong grounding in law and national security. In the past, he has assisted members of the National Security Advisory Board and has had the opportunity to serve at institutions that play a vital role in nation-building, including Rashtriya Raksha University, Gandhinagar (an Institute of National Importance), and the Indian Institute of Science (IISc), Bengaluru, in various capacities. He is proficient in multiple languages. He can be reached at arpan.chak13@gmail.com.`,
-    image: ArpanImg,
+    {
+    name: "Elizabeth Roche",
+    role: "Media Specialist & Senior Research Fellow",
+    bio: `Ms. Elizabeth Roche joined the Jindal School of International Affairs, (Jindal Global University) as Associate Professor after working as a journalist for almost three decades. She holds a Masters Degree in English from Delhi University. She has worked as a television, print, radio and multi-media journalist in Indian and foreign media organisations. She has contributed to two international news agencies – Reuters TV and the French news agency Agence France Presse, AFP. In AFP, as a South Asia correspondent for a decade – she contributed to AFP's coverage of news events in South Asia including reporting extensively on the Sri Lankan civil war, the insurgency in Kashmir, India's relations with Pakistan, Afghanistan and Bhutan. At Mint, the financial paper of Hindustan Times Media Limited, as National Writer and then Editor-Foreign Affairs, she helmed coverage of Indian foreign and defence policy for more than a decade. Her work has been widely cited by scholars in books and research articles produced by think tanks across the world. At JSIA, Prof Roche teaches courses on Indian Foreign Policy, Public Diplomacy and News Media, Global News from Multiple Perspectives and News Media and Politics. She is a keen follower of developments in the Indo-Pacific region and is a regular contributor to several publications including The Diplomat.`,
+    image: elizabethimg,
   },
-  {
+   {
+    name: "Wg Cdr (Dr.) Manoj Kumar (Retd.)",
+    role: "Senior Research Fellow",
+    bio: `Wg Cdr (Dr.) Manoj Kumar (Retd.) is a distinguished Indian Air Force veteran, a product leader, and a leading authority in AI and autonomous systems. His career is a testament to his unwavering commitment to advancing India's indigenous defence capabilities and strategic autonomy.
+As a renowned thought leader and frequent speaker, Dr. Kumar is a well-known voice in the drone ecosystem and is at the forefront of policy discussions on drone technology and the dual-use applications of unmanned aerial systems. He is a key advocate for the 'Atmanirbhar Bharat' initiative, fostering collaboration between government, industry, and academia to accelerate innovation.
+With more than 15 years in defence innovation, Dr. Kumar has a proven track record of delivering high-impact projects. He spearheaded the transformative Mehar Baba Swarm Drone initiative, securing substantial funding and driving the development of over a dozen indigenous UAV technologies. He also played a critical role in the multi-national induction of platforms like the AH-64 Apache, C-17 Transport Aircraft, SPYDER-MR, and the Heron Mk II UAV fleet, along with small arms like the IWI Negev LMG and Tavor X95. His work is recognised for its tangible results, including contributions to mission-critical platforms used in high-stakes operations like Balakot and Galwan. He holds several patents in AI and machine learning, a testament to his technical expertise and innovative mindset.
+Dr. Kumar's leadership extends beyond the military, as he has successfully built an extensive ecosystem with over 129 startups and industries to accelerate technology adoption. He is an
+alumnus of the Indian Air Force Academy, the Weapon School, and BITS Pilani, where he earned his Ph.D. in Technology Integration. He holds a PMP certification from PMI and a Certificate in Generative AI and Prompt Engineering from CDAC. He is also an explosive and Hazardous material-trained officer from the USAF and a DGCA-certified drone pilot.
+In addition to his professional achievements, Dr. Kumar is an accomplished endurance athlete, including being an Ironman triathlete and a PADI-certified scuba diver. His remarkable feat of swimming 2,600 km of the Ganga River underscores the resilience and discipline that define his approach to leadership and innovation.`,
+    image: manojimg,
+  },
+      {
+    name: "Major Parjanya Bhatt",
+    role: "Senior Research Fellow",
+    bio: `Major Parjanya Bhatt comes with experience in national security, policy research, and media. With over eight years as a journalist and four years as a policy researcher, he brings a rare blend of practical field exposure, academic rigor, and communication skills to the study of contemporary security challenges.
+As a journalist, Maj Bhatt worked with the DNA and Free Press Journal and worked as a Research Fellow at the Observer Research Foundation (ORF), where his research work focused on the subject of terrorism and information warfare in Jammu & Kashmir, and conceptualised the special project Kashmir Tracker. His insights have been published across leading platforms such as Deccan Herald, Firstpost, Free Press Journal, CENJOWS, and ORF, among others. He has also authored a chapter on Terrorism and Technology.
+An alumnus of the University of Manchester, where he completed his Master’s in International Politics, at CNAWS, Major Bhatt contributes his unique expertise at the intersection of strategy, communication, and counter-terrorism to shape informed, impactful analysis of India’s evolving security landscape.`,
+    image: ParjanyaImg,
+  },
+    {
+    name: "Dr. Lauren Dagan Amoss",
+    role: "Senior Research Fellow",
+    bio: `Dr. Lauren Dagan Amoss is a researcher specializing in India's foreign and security policy, with a regional focus on the Indo-Pacific. She is a fellow at the Begin-Sadat Center for Strategic Studies (BESA) and a lecturer at Bar-Ilan University. Dr. Dagan Amos is a member of the Deborah Forum, which promotes women in Israel's foreign and defense policy community.`,
+    image: laurenimg,
+  },
+    {
+    name: "Lt Col Umang Kohli (Retd)",
+    role: "Visiting Consultant",
+    bio: `Lt Col Umang Kohli (Retd) brings over 25 years of diverse experience across military service and journalism. He served the Indian Army for 24 years, including six years in Jammu & Kashmir during active counter-terrorism operations. As a Company Commander with the Rashtriya Rifles, he led multiple encounters that eliminated several terrorists. 
+
+His acclaimed book, *In The Times of Article 370*, is based on his Kashmir counter-terrorism experiences. He has studied journalism and mass communication in India, Australia, and the United States, and is recognized as the only journalist in the country to have engaged in active combat. 
+
+His areas of expertise span Geo-politics, Defence, Finance, International Trade, Environment, Agriculture, Cyber Security, Risk Management, Public Relations, and Policy Formulation.`,
+    image: UmangImg,
+  },
+    {
     name: "Divya Malhotra",
     role: "Senior Research Fellow",
     bio: `Divya holds a PhD in Geopolitics from the School of International Studies, Jawaharlal Nehru University (JNU), New Delhi. She is presently a Research Fellow with the Centre for National Security Studies, Bangalore, and the Middle East Institute, New Delhi. 
@@ -41,6 +73,26 @@ She completed her MPhil from JNU, MA in Applied Economics from Christ University
 
 She has presented her research at international conferences in countries including the USA, Israel, Afghanistan, Pakistan, etc., and frequently writes for leading national and international newspapers.`,
     image: DivyaImg,
+  },
+  {
+    name: "Arpan A. Chakravarty",
+    role: "Visiting Research Fellow",
+    bio: `Arpan A. Chakravarty is a Research Fellow at the India Foundation. Currently, he is a Non-Resident Fellow at the Pune International Centre for National Security Studies and has been a Fellow of the Founding Cohort of the Network for Advanced Studies on Pakistan (NASP) at the Takshashila Institute, Bengaluru.
+
+His research interests focus on India's neighbourhood, which he approaches through his strong grounding in law and national security. In the past, he has assisted members of the National Security Advisory Board and has had the opportunity to serve at institutions that play a vital role in nation-building, including Rashtriya Raksha University, Gandhinagar (an Institute of National Importance), and the Indian Institute of Science (IISc), Bengaluru, in various capacities. He is proficient in multiple languages. He can be reached at arpan.chak13@gmail.com.`,
+    image: ArpanImg,
+  },
+    {
+    name: "Khushi Jain",
+    role: "Research Fellow",
+    bio: `Khushi Jain is a researcher specialising in information warfare, extremist narratives, and South Asian security dynamics. She holds an MA in International Relations from King's College London, where her dissertation examined how Egyptian leaders strategically employed identity narratives as tools of statecraft. She has conducted open-source intelligence research on militant organisations in Kashmir, focusing on propaganda strategies and recruitment mechanisms. She has over 2 years of experience in strategic communications and public relations. Contact: khushijain0299@gmail.com.`,
+    image: KhushiImg,
+  },
+    {
+    name: "Violina Sarmah",
+    role: "Research Fellow",
+    bio: `Violina Sarmah holds a Bachelor's degree in Political Science from Gauhati University and completed her Master's in International Relations at South Asian University, New Delhi. She is currently pursuing her PhD from South Asian University, New Delhi. Her research interests center on China, East Asia, and hydro-diplomacy, with a particular emphasis on transboundary water politics and its linkages to regional security and international relations.`,
+    image: violinaimg,
   },
   {
     name: "Anushka Saraswat",
@@ -52,65 +104,14 @@ She served as a core member at the Civil 20 Working Group on Human Rights during
 Her focus areas include white-collar crime, transnational financial offences, FATF frameworks, terror finance, proliferation finance law (UAPA, PMLA, PCA, ICSANT, UNSCR regimes), and international dispute resolution mechanisms under UNCITRAL, ICSID, and PCA frameworks.`,
     image: AnushkaImg,
   },
-  {
-    name: "Lt Col Umang Kohli (Retd)",
-    role: "Visiting Consultant",
-    bio: `Lt Col Umang Kohli (Retd) brings over 25 years of diverse experience across military service and journalism. He served the Indian Army for 24 years, including six years in Jammu & Kashmir during active counter-terrorism operations. As a Company Commander with the Rashtriya Rifles, he led multiple encounters that eliminated several terrorists. 
 
-His acclaimed book, *In The Times of Article 370*, is based on his Kashmir counter-terrorism experiences. He has studied journalism and mass communication in India, Australia, and the United States, and is recognized as the only journalist in the country to have engaged in active combat. 
-
-His areas of expertise span Geo-politics, Defence, Finance, International Trade, Environment, Agriculture, Cyber Security, Risk Management, Public Relations, and Policy Formulation.`,
-    image: UmangImg,
-  },
   {
     name: "Alakshendra Singh",
     role: "Young Research Fellow",
     bio: `Alakshendra Singh is a third-year B.A. (Hons.) Global Affairs with a specialisation in national security and defence and a minor in Public Policy. He is an aspiring China specialist with A1 level proficiency in Mandarin, along with extensive research into the South China Sea, South Asian Power Dynamics, and Indian hard power capabilities. He is further exploring his interest in OSINT as a supplement to conventional IR.`,
     image: AlakshendraImg,
   },
-  {
-    name: "Khushi Jain",
-    role: "Research Fellow",
-    bio: `Khushi Jain is a researcher specialising in information warfare, extremist narratives, and South Asian security dynamics. She holds an MA in International Relations from King's College London, where her dissertation examined how Egyptian leaders strategically employed identity narratives as tools of statecraft. She has conducted open-source intelligence research on militant organisations in Kashmir, focusing on propaganda strategies and recruitment mechanisms. She has over 2 years of experience in strategic communications and public relations. Contact: khushijain0299@gmail.com.`,
-    image: KhushiImg,
-  },
-  {
-    name: "Elizabeth Roche",
-    role: "Media Specialist & Senior Research Fellow",
-    bio: `Ms. Elizabeth Roche joined the Jindal School of International Affairs, (Jindal Global University) as Associate Professor after working as a journalist for almost three decades. She holds a Masters Degree in English from Delhi University. She has worked as a television, print, radio and multi-media journalist in Indian and foreign media organisations. She has contributed to two international news agencies – Reuters TV and the French news agency Agence France Presse, AFP. In AFP, as a South Asia correspondent for a decade – she contributed to AFP's coverage of news events in South Asia including reporting extensively on the Sri Lankan civil war, the insurgency in Kashmir, India's relations with Pakistan, Afghanistan and Bhutan. At Mint, the financial paper of Hindustan Times Media Limited, as National Writer and then Editor-Foreign Affairs, she helmed coverage of Indian foreign and defence policy for more than a decade. Her work has been widely cited by scholars in books and research articles produced by think tanks across the world. At JSIA, Prof Roche teaches courses on Indian Foreign Policy, Public Diplomacy and News Media, Global News from Multiple Perspectives and News Media and Politics. She is a keen follower of developments in the Indo-Pacific region and is a regular contributor to several publications including The Diplomat.`,
-    image: elizabethimg,
-  },
-  {
-    name: "Violina Sarmah",
-    role: "Research Fellow",
-    bio: `Violina Sarmah holds a Bachelor's degree in Political Science from Gauhati University and completed her Master's in International Relations at South Asian University, New Delhi. She is currently pursuing her PhD from South Asian University, New Delhi. Her research interests center on China, East Asia, and hydro-diplomacy, with a particular emphasis on transboundary water politics and its linkages to regional security and international relations.`,
-    image: violinaimg,
-  },
-  {
-    name: "Dr. Lauren Dagan Amoss",
-    role: "Senior Research Fellow",
-    bio: `Dr. Lauren Dagan Amoss is a researcher specializing in India's foreign and security policy, with a regional focus on the Indo-Pacific. She is a fellow at the Begin-Sadat Center for Strategic Studies (BESA) and a lecturer at Bar-Ilan University. Dr. Dagan Amos is a member of the Deborah Forum, which promotes women in Israel's foreign and defense policy community.`,
-    image: laurenimg,
-  },
-    {
-    name: "Wg Cdr (Dr.) Manoj Kumar (Retd.)",
-    role: "Senior Research Fellow",
-    bio: `Wg Cdr (Dr.) Manoj Kumar (Retd.) is a distinguished Indian Air Force veteran, a product leader, and a leading authority in AI and autonomous systems. His career is a testament to his unwavering commitment to advancing India's indigenous defence capabilities and strategic autonomy.
-As a renowned thought leader and frequent speaker, Dr. Kumar is a well-known voice in the drone ecosystem and is at the forefront of policy discussions on drone technology and the dual-use applications of unmanned aerial systems. He is a key advocate for the 'Atmanirbhar Bharat' initiative, fostering collaboration between government, industry, and academia to accelerate innovation.
-With more than 15 years in defence innovation, Dr. Kumar has a proven track record of delivering high-impact projects. He spearheaded the transformative Mehar Baba Swarm Drone initiative, securing substantial funding and driving the development of over a dozen indigenous UAV technologies. He also played a critical role in the multi-national induction of platforms like the AH-64 Apache, C-17 Transport Aircraft, SPYDER-MR, and the Heron Mk II UAV fleet, along with small arms like the IWI Negev LMG and Tavor X95. His work is recognised for its tangible results, including contributions to mission-critical platforms used in high-stakes operations like Balakot and Galwan. He holds several patents in AI and machine learning, a testament to his technical expertise and innovative mindset.
-Dr. Kumar's leadership extends beyond the military, as he has successfully built an extensive ecosystem with over 129 startups and industries to accelerate technology adoption. He is an
-alumnus of the Indian Air Force Academy, the Weapon School, and BITS Pilani, where he earned his Ph.D. in Technology Integration. He holds a PMP certification from PMI and a Certificate in Generative AI and Prompt Engineering from CDAC. He is also an explosive and Hazardous material-trained officer from the USAF and a DGCA-certified drone pilot.
-In addition to his professional achievements, Dr. Kumar is an accomplished endurance athlete, including being an Ironman triathlete and a PADI-certified scuba diver. His remarkable feat of swimming 2,600 km of the Ganga River underscores the resilience and discipline that define his approach to leadership and innovation.`,
-    image: manojimg,
-  },
-    {
-    name: "Major Parjanya Bhatt",
-    role: "Senior Research Fellow",
-    bio: `Major Parjanya Bhatt comes with experience in national security, policy research, and media. With over eight years as a journalist and four years as a policy researcher, he brings a rare blend of practical field exposure, academic rigor, and communication skills to the study of contemporary security challenges.
-As a journalist, Maj Bhatt worked with the DNA and Free Press Journal and worked as a Research Fellow at the Observer Research Foundation (ORF), where his research work focused on the subject of terrorism and information warfare in Jammu & Kashmir, and conceptualised the special project Kashmir Tracker. His insights have been published across leading platforms such as Deccan Herald, Firstpost, Free Press Journal, CENJOWS, and ORF, among others. He has also authored a chapter on Terrorism and Technology.
-An alumnus of the University of Manchester, where he completed his Master’s in International Politics, at CNAWS, Major Bhatt contributes his unique expertise at the intersection of strategy, communication, and counter-terrorism to shape informed, impactful analysis of India’s evolving security landscape.`,
-    image: ParjanyaImg,
-  },
+
 ];
 
 // Intelligence Domain - Intelligence analysis, monitoring, and strategic assessment
@@ -156,12 +157,6 @@ const technicalTeam = [
     role: "Cyber Security Analyst",
     bio: `D serves as a Cyber Security Analyst at CNAWS, monitoring cyber operations emerging from Pakistan. D tracks hostile cyber activities and online propaganda while overseeing CNAWS's internal cyber security framework.`,
     image: DImg,
-  },
-  {
-    name: "Aasia Rizwan",
-    role: "Graphics Designer",
-    bio: `Aasia Rizwan is a postgraduate in Conflict Analysis and Peacebuilding from Jamia Millia Islamia's Nelson Mandela Centre for Peace and Conflict Resolution. Her academic and research interests lie at the intersection of media, gender, and South Asian regional studies. She holds a bachelor's degree in English and Economics from Dyal Singh College, University of Delhi. In addition to her academic pursuits, she has a strong interest in graphic design, which she leverages to visually communicate evidence-based research and make complex ideas more accessible and impactful.`,
-    image: AasiaImg,
   },
   {
     name: "Vedant Sharma",
@@ -233,12 +228,6 @@ His areas of expertise span Geo-politics, Defence, Finance, International Trade,
     role: "Research Fellow",
     bio: `Khushi Jain is a researcher specialising in information warfare, extremist narratives, and South Asian security dynamics. She holds an MA in International Relations from King's College London, where her dissertation examined how Egyptian leaders strategically employed identity narratives as tools of statecraft. She has conducted open-source intelligence research on militant organisations in Kashmir, focusing on propaganda strategies and recruitment mechanisms. She has over 2 years of experience in strategic communications and public relations. Contact: khushijain0299@gmail.com.`,
     image: KhushiImg,
-  },
-  {
-    name: "Aasia Rizwan",
-    role: "Graphics Designer",
-    bio: `Aasia Rizwan is a postgraduate in Conflict Analysis and Peacebuilding from Jamia Millia Islamia's Nelson Mandela Centre for Peace and Conflict Resolution. Her academic and research interests lie at the intersection of media, gender, and South Asian regional studies. She holds a bachelor's degree in English and Economics from Dyal Singh College, University of Delhi. In addition to her academic pursuits, she has a strong interest in graphic design, which she leverages to visually communicate evidence-based research and make complex ideas more accessible and impactful.`,
-    image: AasiaImg,
   },
   {
     name: "Sushant Pawar",
