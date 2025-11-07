@@ -8,274 +8,230 @@ const sectionVariant = {
 };
 
 const courses = [
-  { title: "OSINT - Gathering and Analyses Methodologies", level: "Beginner", price: 999 },
-  { title: "Non-Contact Warfare", level: "Beginner", price: 1199 },
-  { title: "OSINT for Militancy and Terrorism", level: "Advanced", price: 1499 },
-  { title: "Understanding Research Methodology and Techniques for IR", level: "Beginner", price: 899 },
-  { title: "A Guide to Geo-Intelligence", level: "Advanced", price: 1299 },
-  { title: "Understanding Pakistan's Playbook vis-a-vis India", level: "Beginner", price: 999 },
+  {
+    id: "research-methodology",
+    title: "CNAWS Online Certificate Course in Social Science Research Methodology",
+    level: "Beginner",
+    price: 1500,
+    duration: "4 Weeks, 10 Live Sessions, 1.5 Hours Each",
+    mode: "Live Interactive Classes (No pre-recorded sessions)",
+    certificate: "Issued upon completion",
+    overview: `This certificate course is designed for students and new researchers in Political Science, International Relations, and Social Sciences. It focuses on developing research thinking and academic writing clarity.`,
+    aims: [
+      "Understand how to conceptualise a research topic",
+      "Conduct a structured literature review",
+      "Develop research design and methodology",
+      "Gain exposure to data collection and interpretation",
+      "Improve academic writing for publication"
+    ],
+    offers: [
+      "Live interactive sessions",
+      "Step-by-step explanation of concepts",
+      "Beginner-friendly examples and templates",
+      "Structured writing guidance",
+      "No pre-recorded videos"
+    ],
+    sessions: [
+      ["1", "Orientation & Introductions", "Understanding research thinking"],
+      ["2", "Foundations of Social Science Research", "Nature, types & scope"],
+      ["3", "Research Problem & Questions", "Refining direction & scope"],
+      ["4", "Literature Review Techniques", "Search, structure & synthesis"],
+      ["5", "Research Design & Methodology", "Qualitative, Quantitative, Mixed Methods"],
+      ["6", "Sampling Strategies", "Sampling logic & type selection"],
+      ["7", "Data Collection Methods", "Surveys, interviews & observation"],
+      ["8", "Data Analysis (Basic)", "Coding & thematic interpretation"],
+      ["9", "Ethics in Research", "Bias mitigation & confidentiality"],
+      ["10", "Writing & Presenting Research", "Structuring arguments & academic writing"],
+    ],
+    idealFor: [
+      "Undergraduate & postgraduate students",
+      "Early-stage researchers",
+      "Individuals preparing academic papers",
+      "Anyone aiming to publish research"
+    ]
+  },
+
+  {
+    id: "osint",
+    title: "CNAWS Online Certificate Course in Open-Source Intelligence (OSINT): Collection, Analysis & Applications",
+    level: "Beginner",
+    price: 1500,
+    duration: "4 Weeks, 10 Live Sessions, 1.5 Hours Each",
+    mode: "Live Interactive Classes (No pre-recorded sessions)",
+    certificate: "Issued upon completion",
+    overview: `This course provides a structured introduction to Open-Source Intelligence (OSINT) — focusing on collecting, verifying, and analysing publicly available data to generate actionable insights.`,
+    aims: [
+      "Understand the role of intelligence in national security",
+      "Apply OSINT collection and analysis methods",
+      "Use analytical frameworks for evaluating information",
+      "Write structured intelligence assessments",
+      "Recognize ethical and operational OSINT considerations"
+    ],
+    offers: [
+      "Live case-based learning",
+      "Hands-on intelligence collection & verification",
+      "Structured report writing framework",
+      "Real-world scenario assignments",
+      "No pre-recorded classes — fully live"
+    ],
+    sessions: [
+      ["1", "Introduction to Intelligence", "Purpose & collection disciplines"],
+      ["2", "Introduction to OSINT", "Scope, importance & legal considerations"],
+      ["3", "OSINT Sources", "Web, media, database & social platforms"],
+      ["4", "OSINT Collection Methods", "Active vs passive collection & verification"],
+      ["5", "Analysis Techniques", "SWOT, PEST, Network Analysis"],
+      ["6", "Intelligence Reporting", "Tactical, operational & strategic formats"],
+      ["7", "Report Writing Practice", "5W + 1H structured writing"],
+      ["8", "Applied OSINT Use Cases", "Security, risk & operational assessments"],
+      ["9", "Ethics & Bias", "Verification and objectivity"],
+      ["10", "Capstone Exercise", "Full cycle OSINT operation & feedback"],
+    ],
+    idealFor: [
+      "Students in IR, Security & Politics",
+      "Researchers & Analysts",
+      "Journalists & Policy Professionals",
+      "Anyone interested in intelligence work"
+    ]
+  }
 ];
 
-// ✅ Helper to load Razorpay SDK dynamically
-const loadRazorpayScript = (src: string): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
+// ✅ Razorpay Loader
+const loadRazorpayScript = (src: string): Promise<boolean> =>
+  new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
   });
-};
 
 const Course = () => {
-  const [selectedCourse, setSelectedCourse] = useState<null | { title: string; price: number }>(null);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useEffect(() => window.scrollTo(0, 0), []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const openPaymentModal = (course: { title: string; price: number }) => {
-    setSelectedCourse(course);
-  };
-
-  const closeModal = () => {
-    setSelectedCourse(null);
-    setFormData({ name: "", email: "" });
-    setSuccessMessage("");
-  };
+  const handleInputChange = (e: any) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handlePayment = async () => {
-    if (!formData.name.trim() || !formData.email.trim()) {
-      alert("Please fill in your name and email before continuing.");
-      return;
-    }
-
+    if (!formData.name || !formData.email) return alert("Fill in all fields.");
     setLoading(true);
-    const sdkLoaded = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+    await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
 
-    if (!sdkLoaded) {
-      alert("Failed to load Razorpay SDK. Please check your internet connection.");
-      setLoading(false);
-      return;
-    }
+    const res = await fetch("https://cnaws.in/payments/create_order.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: selectedCourse.price, courseName: selectedCourse.title }),
+    });
 
-    try {
-      // ✅ Step 1: Create order from backend PHP API
-      const orderResponse = await fetch("https://cnaws.in/payments/create_order.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: selectedCourse?.price,
-          courseName: selectedCourse?.title,
-        }),
-      });
+    const data = await res.json();
 
-      const orderData = await orderResponse.json();
-      if (!orderData.orderId) {
-        throw new Error("Failed to create order. Try again later.");
+    new (window as any).Razorpay({
+      key: "rzp_test_yourkeyhere",
+      amount: selectedCourse.price * 100,
+      currency: "INR",
+      name: "CNAWS Academy",
+      description: selectedCourse.title,
+      order_id: data.orderId,
+      prefill: formData,
+      handler: async (response: any) => {
+        const verify = await fetch("https://cnaws.in/payments/verify_payment.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...response, ...formData, course: selectedCourse.title, amount: selectedCourse.price }),
+        });
+        const verifyData = await verify.json();
+        if (verifyData.status === "success") setSuccessMessage(`✅ Enrollment successful! Check ${formData.email}`);
       }
+    }).open();
 
-      // ✅ Step 2: Configure Razorpay Checkout
-      const options = {
-        key: "rzp_test_yourkeyhere", // ⚠️ Replace with your Razorpay key
-        amount: selectedCourse!.price * 100,
-        currency: "INR",
-        name: "CNAWS Academy",
-        description: `Enrollment for ${selectedCourse!.title}`,
-        order_id: orderData.orderId,
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-        },
-        theme: { color: "#2563EB" },
-
-        // ✅ Step 3: After successful payment
-        handler: async function (response: any) {
-          const verifyRes = await fetch("https://cnaws.in/payments/verify_payment.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              name: formData.name,
-              email: formData.email,
-              course: selectedCourse!.title,
-              amount: selectedCourse!.price,
-            }),
-          });
-
-          const verifyData = await verifyRes.json();
-
-          if (verifyData.status === "success") {
-            setSuccessMessage(
-              `✅ Payment Successful! A confirmation email has been sent to ${formData.email}.`
-            );
-          } else {
-            alert("❌ Payment verification failed. Please contact support.");
-          }
-        },
-
-        // Optional: Handle payment close without completing
-        modal: {
-          ondismiss: function () {
-            alert("Payment cancelled or closed.");
-          },
-        },
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("Something went wrong while processing your payment. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
     <>
-      <Helmet>
-        <title>CNAWS | Courses</title>
-      </Helmet>
+      <Helmet><title>CNAWS | Courses</title></Helmet>
 
       <div className="min-h-screen bg-news-light dark:bg-gray-900 px-6 py-16">
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={sectionVariant}
-          className="text-center mb-14"
-        >
-          <h1 className="text-4xl font-extrabold mb-4 text-news-dark dark:text-white">
-            Courses
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore specialized national security and intelligence courses. Enroll securely using Razorpay.
-          </p>
+        <motion.div initial="hidden" animate="show" variants={sectionVariant} className="text-center mb-14">
+          <h1 className="text-4xl font-extrabold mb-4 text-news-dark dark:text-white">Courses</h1>
         </motion.div>
 
-        {/* ✅ Course Cards */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {courses.map((course, index) => (
+        <div className="grid gap-8 max-w-5xl mx-auto">
+          {courses.map((courseItem, index) => (
             <motion.div
               key={index}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl"
+              whileHover={{ scale: 1.03 }}
+              className="p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border dark:border-gray-700 cursor-pointer"
+              onClick={() => setSelectedCourse(courseItem)}
             >
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {course.title}
-              </h3>
-              <span
-                className={`inline-block mb-3 px-3 py-1 text-sm font-medium rounded-full ${
-                  course.level === "Beginner"
-                    ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200"
-                    : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"
-                }`}
-              >
-                {course.level}
-              </span>
-              <p className="text-gray-600 dark:text-gray-300 mb-3 text-sm leading-relaxed">
-                {course.level === "Beginner"
-                  ? "A foundational course designed for learners new to this domain."
-                  : "An advanced course for strategic professionals."}
-              </p>
-              <p className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                ₹{course.price}
-              </p>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => openPaymentModal(course)}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md"
-              >
-                Enroll Now
-              </motion.button>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{courseItem.title}</h3>
+              <p className="text-gray-600 dark:text-gray-400">{courseItem.duration}</p>
+              <p className="text-lg font-semibold text-blue-600 dark:text-blue-400 mt-2">₹{courseItem.price}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* ✅ Payment Modal */}
+        {/* ✅ DETAILS MODAL */}
         <AnimatePresence>
           {selectedCourse && (
-            <motion.div
-              className="fixed inset-0 bg-black/60 flex justify-center items-center z-50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-                className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 max-w-full"
-              >
-                {!successMessage ? (
-                  <>
-                    <h2 className="text-2xl font-bold text-center mb-2 text-news-dark dark:text-white">
-                      Enroll in {selectedCourse.title}
-                    </h2>
-                    <p className="text-center text-gray-600 dark:text-gray-300 mb-4">
-                      Please provide your details to proceed.
-                    </p>
+            <motion.div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div className="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+                initial={{ scale: 0.92 }} animate={{ scale: 1 }} exit={{ scale: 0.92 }}>
 
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Your Name"
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                      />
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Your Email"
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                      />
-                    </div>
+                <h2 className="text-2xl font-bold mb-2">{selectedCourse.title}</h2>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line mb-6">{selectedCourse.overview}</p>
 
-                    <div className="flex justify-between mt-6">
-                      <button
-                        onClick={closeModal}
-                        className="px-4 py-2 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-400 dark:hover:bg-gray-600"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={handlePayment}
-                        disabled={loading}
-                        className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-60"
-                      >
-                        {loading ? "Processing..." : "Proceed to Payment"}
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center space-y-4">
-                    <h2 className="text-2xl font-bold text-green-600">Payment Successful 🎉</h2>
-                    <p className="text-gray-700 dark:text-gray-300">{successMessage}</p>
-                    <button
-                      onClick={closeModal}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg"
-                    >
-                      Close
-                    </button>
-                  </div>
-                )}
+                <h3 className="text-xl font-semibold mb-2">Learning Outcomes</h3>
+                <ul className="list-disc ml-6 mb-6 space-y-1">
+                  {selectedCourse.aims.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                </ul>
+
+                <h3 className="text-xl font-semibold mb-2">What This Course Offers</h3>
+                <ul className="list-disc ml-6 mb-6 space-y-1">
+                  {selectedCourse.offers.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                </ul>
+
+                <h3 className="text-xl font-semibold mb-3">Course Structure (Tentative)</h3>
+                <table className="w-full text-left border dark:border-gray-600 mb-6">
+                  <thead>
+                    <tr className="bg-gray-200 dark:bg-gray-700">
+                      <th className="p-2">Session</th>
+                      <th className="p-2">Topic</th>
+                      <th className="p-2">Focus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedCourse.sessions.map((s: any, i: number) => (
+                      <tr key={i} className="border-t dark:border-gray-600">
+                        <td className="p-2">{s[0]}</td><td className="p-2">{s[1]}</td><td className="p-2">{s[2]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <h3 className="text-xl font-semibold mb-2">Who Should Enroll</h3>
+                <ul className="list-disc ml-6 mb-6 space-y-1">
+                  {selectedCourse.idealFor.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                </ul>
+
+                <div className="bg-gray-100 dark:bg-gray-900 p-5 rounded-lg mb-4">
+                  <h3 className="font-semibold mb-3">Enroll Now — ₹{selectedCourse.price}</h3>
+                  <input className="w-full mb-3 p-2 rounded" placeholder="Your Name" name="name" onChange={handleInputChange} />
+                  <input className="w-full mb-3 p-2 rounded" placeholder="Your Email" name="email" onChange={handleInputChange} />
+                  <button onClick={handlePayment} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    {loading ? "Processing..." : "Proceed to Payment"}
+                  </button>
+                  {successMessage && <p className="text-green-600 mt-3">{successMessage}</p>}
+                </div>
+
+                <button className="text-red-500 font-semibold mt-4" onClick={() => setSelectedCourse(null)}>
+                  Close
+                </button>
               </motion.div>
             </motion.div>
           )}
