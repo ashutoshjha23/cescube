@@ -25,6 +25,7 @@ import Gathering from "./pages/Gathering";
 import ArticlePage from "./pages/ArticlePage";
 import NotFound from "./pages/NotFound";
 import MapAdmin from "./pages/MapAdmin";
+import Consultancy from "@/pages/Consultancy";
 
 // New Conflict Map Pages
 import TerrorismDatabaseJK from "./pages/TerrorismDatabaseJK";
@@ -132,6 +133,7 @@ const App: React.FC = () => (
                 <Route path="/board" element={<BoardOfAdvisor />} />
                 <Route path="/core-team" element={<CoreTeam />} />
                 <Route path="/gathering" element={<Gathering />} />
+                <Route path="/consultancy" element={<Consultancy />} />
 
                 {/* Thematic Pages */}
                 <Route path="/emerging" element={<Emerging />} />
