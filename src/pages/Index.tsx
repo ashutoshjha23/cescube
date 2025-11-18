@@ -199,10 +199,10 @@ const IndexPage = () => {
                 transition={{ duration: 0.8 }}
                 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg"
               >
-                Tracking Tomorrow's Battles Today
+                Centre for New Age Warfare Studies
               </motion.h1>
               <p className="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-sm">
-                Get the latest news and reports from across the globe — all in one place.
+                Tracking Tomorrow's Battles Today
               </p>
               <motion.button
                 onClick={handleExploreClick}

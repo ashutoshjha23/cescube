@@ -82,6 +82,7 @@ const Header = () => {
   ];
 
   const simpleLinks = [
+    { label: "Consultancy", path: "/consultancy" },
     { label: "Courses", path: "/courses" },
     { label: "Contact", path: "/contact" },
   ];
@@ -95,11 +96,14 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16">
           
-          {/* Left: Logo */}
+          {/* Logo ke paas ka naam */}
           <Link
             to="/"
             className="flex items-center space-x-2 transform transition-transform duration-300 hover:scale-105"
           >
+            <span className="text-xl md:text-2xl font-bold text-news-dark dark:text-white">
+            
+            </span>
             <img
               src={darkMode ? logoLight : logoDark}
               alt="CNAWS Logo"
