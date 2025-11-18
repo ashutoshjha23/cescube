@@ -130,7 +130,7 @@ const Course = () => {
     const data = await res.json();
 
     new (window as any).Razorpay({
-      key: "rzp_test_yourkeyhere",
+      key: "rzp_live_Rcst3ypjkhQ4dQ",
       amount: selectedCourse.price * 100,
       currency: "INR",
       name: "CNAWS Academy",

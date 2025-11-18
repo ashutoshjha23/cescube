@@ -74,7 +74,7 @@ const Header = () => {
           path: "/terrorism-database-pakistan",
         },
         {
-          label: "Maps",
+          label: "Pakistan Militancy Dashboard",
           path: "/map",
         },
       ],
