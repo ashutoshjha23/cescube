@@ -95,7 +95,9 @@ const courses = [
   }
 ];
 
-// ✅ Razorpay Loader
+// -------------------------------------------
+//  Razorpay Loader
+// -------------------------------------------
 const loadRazorpayScript = (src: string): Promise<boolean> =>
   new Promise((resolve) => {
     const s = document.createElement("script");
@@ -116,41 +118,96 @@ const Course = () => {
   const handleInputChange = (e: any) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // -------------------------------------------------------
+  //  COMPLETE FIXED PAYMENT FUNCTION
+  // -------------------------------------------------------
   const handlePayment = async () => {
-    if (!formData.name || !formData.email) return alert("Fill in all fields.");
+    if (!formData.name || !formData.email) {
+      alert("Please fill in your name and email.");
+      return;
+    }
+
     setLoading(true);
-    await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
 
-    const res = await fetch("https://cnaws.in/payments/create_order.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: selectedCourse.price, courseName: selectedCourse.title }),
-    });
+    const loaded = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!loaded) {
+      alert("Failed to load Razorpay.");
+      setLoading(false);
+      return;
+    }
 
-    const data = await res.json();
+    try {
+      // 1️⃣ CREATE ORDER
+      const res = await fetch("https://cnaws.in/api/payments/create_order.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: selectedCourse.price,
+          courseName: selectedCourse.title,
+        }),
+      });
 
-    new (window as any).Razorpay({
-      key: "rzp_live_Rcst3ypjkhQ4dQ",
-      amount: selectedCourse.price * 100,
-      currency: "INR",
-      name: "CNAWS Academy",
-      description: selectedCourse.title,
-      order_id: data.orderId,
-      prefill: formData,
-      handler: async (response: any) => {
-        const verify = await fetch("https://cnaws.in/payments/verify_payment.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...response, ...formData, course: selectedCourse.title, amount: selectedCourse.price }),
-        });
-        const verifyData = await verify.json();
-        if (verifyData.status === "success") setSuccessMessage(`✅ Enrollment successful! Check ${formData.email}`);
+      if (!res.ok) {
+        throw new Error("Server error: Could not create order.");
       }
-    }).open();
+
+      const data = await res.json();
+      if (!data.orderId) throw new Error("Order ID missing (CORS or server error)");
+
+      // 2️⃣ OPEN RAZORPAY
+      const options = {
+        key: "rzp_live_Rcst3ypjkhQ4dQ",
+        amount: selectedCourse.price * 100,
+        currency: "INR",
+        name: "CNAWS Academy",
+        description: selectedCourse.title,
+        order_id: data.orderId,
+
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+        },
+
+        handler: async function (response: any) {
+          // 3️⃣ VERIFY PAYMENT
+          const verifyRes = await fetch("https://cnaws.in/api/payments/verify_payment.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...response,
+              ...formData,
+              course: selectedCourse.title,
+              amount: selectedCourse.price,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+          if (verifyData.status === "success") {
+            setSuccessMessage(
+              `🎉 Enrollment successful! Check your inbox (${formData.email})`
+            );
+          } else {
+            alert("Payment verified but email could not be sent.");
+          }
+        },
+
+        theme: { color: "#1e40af" },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
+
+    } catch (err: any) {
+      alert(err.message || "Payment failed.");
+      console.error(err);
+    }
 
     setLoading(false);
   };
 
+  // -------------------------------------------------------
+  //  UI
+  // -------------------------------------------------------
   return (
     <>
       <Helmet><title>CNAWS | Courses</title></Helmet>
@@ -175,27 +232,43 @@ const Course = () => {
           ))}
         </div>
 
-        {/* ✅ DETAILS MODAL */}
+        {/* MODAL */}
         <AnimatePresence>
           {selectedCourse && (
-            <motion.div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <motion.div className="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
-                initial={{ scale: 0.92 }} animate={{ scale: 1 }} exit={{ scale: 0.92 }}>
-
+            <motion.div
+              className="fixed inset-0 bg-black/60 flex justify-center items-center z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+                initial={{ scale: 0.92 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.92 }}
+              >
                 <h2 className="text-2xl font-bold mb-2">{selectedCourse.title}</h2>
-                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line mb-6">{selectedCourse.overview}</p>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line mb-6">
+                  {selectedCourse.overview}
+                </p>
 
+                {/* Learning outcomes */}
                 <h3 className="text-xl font-semibold mb-2">Learning Outcomes</h3>
                 <ul className="list-disc ml-6 mb-6 space-y-1">
-                  {selectedCourse.aims.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                  {selectedCourse.aims.map((a: string, i: number) => (
+                    <li key={i}>{a}</li>
+                  ))}
                 </ul>
 
+                {/* Offers */}
                 <h3 className="text-xl font-semibold mb-2">What This Course Offers</h3>
                 <ul className="list-disc ml-6 mb-6 space-y-1">
-                  {selectedCourse.offers.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                  {selectedCourse.offers.map((a: string, i: number) => (
+                    <li key={i}>{a}</li>
+                  ))}
                 </ul>
 
+                {/* Sessions */}
                 <h3 className="text-xl font-semibold mb-3">Course Structure (Tentative)</h3>
                 <table className="w-full text-left border dark:border-gray-600 mb-6">
                   <thead>
@@ -208,28 +281,59 @@ const Course = () => {
                   <tbody>
                     {selectedCourse.sessions.map((s: any, i: number) => (
                       <tr key={i} className="border-t dark:border-gray-600">
-                        <td className="p-2">{s[0]}</td><td className="p-2">{s[1]}</td><td className="p-2">{s[2]}</td>
+                        <td className="p-2">{s[0]}</td>
+                        <td className="p-2">{s[1]}</td>
+                        <td className="p-2">{s[2]}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
 
+                {/* Ideal For */}
                 <h3 className="text-xl font-semibold mb-2">Who Should Enroll</h3>
                 <ul className="list-disc ml-6 mb-6 space-y-1">
-                  {selectedCourse.idealFor.map((a: string, i: number) => <li key={i}>{a}</li>)}
+                  {selectedCourse.idealFor.map((a: string, i: number) => (
+                    <li key={i}>{a}</li>
+                  ))}
                 </ul>
 
+                {/* Payment Box */}
                 <div className="bg-gray-100 dark:bg-gray-900 p-5 rounded-lg mb-4">
-                  <h3 className="font-semibold mb-3">Enroll Now — ₹{selectedCourse.price}</h3>
-                  <input className="w-full mb-3 p-2 rounded" placeholder="Your Name" name="name" onChange={handleInputChange} />
-                  <input className="w-full mb-3 p-2 rounded" placeholder="Your Email" name="email" onChange={handleInputChange} />
-                  <button onClick={handlePayment} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                  <h3 className="font-semibold mb-3">
+                    Enroll Now — ₹{selectedCourse.price}
+                  </h3>
+
+                  <input
+                    className="w-full mb-3 p-2 rounded"
+                    placeholder="Your Name"
+                    name="name"
+                    onChange={handleInputChange}
+                  />
+
+                  <input
+                    className="w-full mb-3 p-2 rounded"
+                    placeholder="Your Email"
+                    name="email"
+                    onChange={handleInputChange}
+                  />
+
+                  <button
+                    onClick={loading ? () => {} : handlePayment}
+                    disabled={loading}
+                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50"
+                  >
                     {loading ? "Processing..." : "Proceed to Payment"}
                   </button>
-                  {successMessage && <p className="text-green-600 mt-3">{successMessage}</p>}
+
+                  {successMessage && (
+                    <p className="text-green-600 mt-3">{successMessage}</p>
+                  )}
                 </div>
 
-                <button className="text-red-500 font-semibold mt-4" onClick={() => setSelectedCourse(null)}>
+                <button
+                  className="text-red-500 font-semibold mt-4"
+                  onClick={() => setSelectedCourse(null)}
+                >
                   Close
                 </button>
               </motion.div>
